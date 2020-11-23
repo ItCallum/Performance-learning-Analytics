@@ -1,0 +1,158 @@
+---
+title: "CSC8631_202021_Explore"
+author: "Callum Simpson"
+date: "20/11/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+
+setwd("CSC8631_202021")
+
+library('ProjectTemplate')
+load.project()
+
+
+```
+
+## Set up
+
+This is an R Markdown which devels into me geeting a grips with the data, what exactly that it is telling us so that i could find an area in which to create a question
+
+Im using this document to spit ball ideas and to make sure that my project has been created correctly
+
+
+## Archetype survey responses
+
+Week 3 - 7  
+
+Seems to be a collection of the archetypes of the users.
+
+```{r the_data}
+
+head(cyber_security_3_archetype_survey_responses)
+
+table(cyber_security_3_archetype_survey_responses$archetype)
+
+head(cyber_security_4_archetype_survey_responses)
+
+head(cyber_security_5_archetype_survey_responses)
+
+head(cyber_security_6_archetype_survey_responses)
+
+head(cyber_security_7_archetype_survey_responses)
+```
+## cyber security enrolments
+
+The enrolments for each run 
+
+contianes 
+- role of the person
+- gender
+- country 
+- age
+- highest education
+- If they are employed and where 
+
+
+```{r the_data}
+
+head(cyber_security_1_enrolments)
+head(cyber_security_2_enrolments)
+head(cyber_security_3_enrolments)
+head(cyber_security_4_enrolments)
+head(cyber_security_5_enrolments)
+head(cyber_security_6_enrolments)
+head(cyber_security_7_enrolments)
+
+```
+
+## cyber leaving results
+
+weeks 4 - 6
+
+The reason people left and when about in the course they left
+
+
+```{r the_data}
+
+head(cyber_security_4_leaving_survey_responses)
+head(cyber_security_5_leaving_survey_responses)
+head(cyber_security_6_leaving_survey_responses)
+head(cyber_security_7_leaving_survey_responses)
+
+```
+
+## question response
+
+All weeks 
+
+The responses for the questions for that cycle
+
+```{r the_data}
+
+head(cyber_security_1_question_response)
+head(cyber_security_2_question_response)
+head(cyber_security_3_question_response)
+head(cyber_security_4_question_response)
+head(cyber_security_5_question_response)
+head(cyber_security_6_question_response)
+head(cyber_security_7_question_response)
+
+```
+
+## Step activity
+
+Each steps and when people started and finished the step
+
+
+```{r the_data}
+
+head(cyber_security_1_step_activity)
+
+```
+
+
+## Team members
+
+2-7 
+
+Each steps and when people started and finished the step
+
+- team role is the role whole of the person in the team
+- user role seems to be role of what the user 
+
+```{r the_data}
+
+head(cyber_security_3_team_members)
+
+```
+
+
+##weekly_sentiment_survey_responses
+
+Seems to be only week 6 and 7
+
+Peoples response to the course but only seems to weeks 6 and 7
+
+
+```{r the_data}
+
+head(cyber_security_6_weekly_sentiment_survey_responses)
+
+```
+
+##video_stats
+
+Information about the videos
+
+how long people are watching 
+where they are watching it 
+what people are watching it on
+
+
+```{r the_data}
+
+head(cyber_security_3_video_stats)
+
+```
