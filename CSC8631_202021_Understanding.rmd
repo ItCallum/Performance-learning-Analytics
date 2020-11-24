@@ -7,7 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 
-setwd("CSC8631_202021")
+setwd("Project/CSC8631_202021")
 
 library('ProjectTemplate')
 load.project()
@@ -17,7 +17,7 @@ load.project()
 
 ## Set up
 
-This is an R Markdown which devels into me geeting a grips with the data, what exactly that it is telling us so that i could find an area in which to create a question
+This is an R Markdown which devels into me getting a grips with the data, what exactly that it is telling us so that i could find an area in which to create a question
 
 Im using this document to spit ball ideas and to make sure that my project has been created correctly
 

@@ -7,7 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 
-setwd("CSC8631_202021")
+setwd("Project/CSC8631_202021")
 library('ProjectTemplate')
 load.project()
 
