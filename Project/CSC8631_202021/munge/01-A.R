@@ -42,3 +42,4 @@ combine_Leaving_clean$last_completed_step_number <- as.factor(combine_Leaving_cl
 combine_Leaving_clean$last_completed_step <- as.factor(combine_Leaving_clean$last_completed_step)
 
 combine_Leaving_clean_v2 <- combine_Leaving_clean %>% filter(left_at > last_completed_step_at || is.na(last_completed_step_at))
+
