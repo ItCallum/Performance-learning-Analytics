@@ -10,9 +10,9 @@ levels(combine_Leaving$leaving_reason) <- c(levels(combine_Leaving$leaving_reaso
 levels(combine_Leaving$leaving_reason) <- c(levels(combine_Leaving$leaving_reason), "The course was not what I expected")
 levels(combine_Leaving$leaving_reason) <- c(levels(combine_Leaving$leaving_reason), "The course would not help me reach my goals")
 
-combine_Leaving$leaving_reason[combine_Leaving$leaving_reason == 'I donâ\200\231t have enough time'] <- 'I do not have enough time'
-combine_Leaving$leaving_reason[combine_Leaving$leaving_reason == 'The course wasnâ\200\231t what I expected'] <- 'The course was not what I expected'
-combine_Leaving$leaving_reason[combine_Leaving$leaving_reason == 'The course wonâ\200\231t help me reach my goals'] <- 'The course would not help me reach my goals'
+combine_Leaving$leaving_reason[combine_Leaving$leaving_reason == 'I don?\200\231t have enough time'] <- 'I do not have enough time'
+combine_Leaving$leaving_reason[combine_Leaving$leaving_reason == 'The course wasn?\200\231t what I expected'] <- 'The course was not what I expected'
+combine_Leaving$leaving_reason[combine_Leaving$leaving_reason == 'The course won?\200\231t help me reach my goals'] <- 'The course would not help me reach my goals'
 
 
 combine_Leaving$Cycle <- factor(combine_Leaving$Cycle)
@@ -30,6 +30,8 @@ combine_Leaving_clean$left_at <- as.POSIXct(combine_Leaving_clean$left_at,format
 
 ##combine_Leaving_date <- combine_Leaving_date %>% mutate(Time = format(ymd_hms(left_at), format = c("%H:%M:%S")))
 
+combine_Leaving_clean$last_completed_step_at <- as.POSIXct(combine_Leaving_clean$last_completed_step_at,format="%Y-%m-%d %H:%M:%S") 
+
 combine_Leaving_clean <- combine_Leaving_clean %>% mutate(Time = strftime(left_at, format="%H"))
 
 
@@ -38,3 +40,5 @@ combine_Leaving_clean$last_completed_week_number <- as.factor(combine_Leaving_cl
 combine_Leaving_clean$last_completed_step_number <- as.factor(combine_Leaving_clean$last_completed_step_number)
 
 combine_Leaving_clean$last_completed_step <- as.factor(combine_Leaving_clean$last_completed_step)
+
+combine_Leaving_clean_v2 <- combine_Leaving_clean %>% filter(left_at > last_completed_step_at || is.na(last_completed_step_at))
