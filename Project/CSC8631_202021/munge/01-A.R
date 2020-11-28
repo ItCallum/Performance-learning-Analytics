@@ -10,14 +10,17 @@ levels(combine_Leaving$leaving_reason) <- c(levels(combine_Leaving$leaving_reaso
 levels(combine_Leaving$leaving_reason) <- c(levels(combine_Leaving$leaving_reason), "The course was not what I expected")
 levels(combine_Leaving$leaving_reason) <- c(levels(combine_Leaving$leaving_reason), "The course would not help me reach my goals")
 
-combine_Leaving$leaving_reason[combine_Leaving$leaving_reason == 'I don?\200\231t have enough time'] <- 'I do not have enough time'
-combine_Leaving$leaving_reason[combine_Leaving$leaving_reason == 'The course wasn?\200\231t what I expected'] <- 'The course was not what I expected'
-combine_Leaving$leaving_reason[combine_Leaving$leaving_reason == 'The course won?\200\231t help me reach my goals'] <- 'The course would not help me reach my goals'
+combine_Leaving$leaving_reason[combine_Leaving$leaving_reason == 'I donâ\200\231t have enough time'] <- 'I do not have enough time'
+combine_Leaving$leaving_reason[combine_Leaving$leaving_reason == '	The course wasnâ\200\231t what I expected'] <- 'The course was not what I expected'
+combine_Leaving$leaving_reason[combine_Leaving$leaving_reason == 'The course wonâ\200\231t help me reach my goals'] <- 'The course would not help me reach my goals'
 
 
 combine_Leaving$Cycle <- factor(combine_Leaving$Cycle)
 
 combine_Leaving_NoDups <- combine_Leaving %>% group_by(learner_id,Cycle) %>% filter(n()==1)
+
+
+
 
 combine_Leaving_clean <- combine_Leaving_NoDups
 

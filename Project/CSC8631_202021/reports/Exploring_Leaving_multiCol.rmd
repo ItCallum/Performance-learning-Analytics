@@ -27,7 +27,6 @@ In our last set of analysis we found that there was alot of people who left the 
 
 
 
-
 ```{r reasonleft_lastComp}
 
 combine_Leaving_clean_v2
