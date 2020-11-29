@@ -47,3 +47,17 @@ combine_Leaving_clean$last_completed_step <- as.factor(combine_Leaving_clean$las
 combine_Leaving_clean_v2 <- combine_Leaving_clean %>% filter(left_at > last_completed_step_at || is.na(last_completed_step_at))
 
 time_between <- (na.omit(combine_Leaving_clean_v2)) %>% mutate(time_between_deciding_to_leave = difftime(left_at, last_completed_step_at, unit = "mins"), days_passed = floor(difftime(left_at, last_completed_step_at, unit = "days"))) 
+
+cyber_security_4_enrolments <- cyber_security_4_enrolments  %>% mutate(Cycle = 4)
+cyber_security_5_enrolments <- cyber_security_5_enrolments  %>% mutate(Cycle = 5)
+cyber_security_6_enrolments <- cyber_security_6_enrolments  %>% mutate(Cycle = 6)
+cyber_security_7_enrolments <- cyber_security_7_enrolments  %>% mutate(Cycle = 7)
+
+combine_Enrolments <- do.call("rbind", list((cyber_security_4_enrolments),(cyber_security_5_enrolments),
+                                         (cyber_security_6_enrolments),(cyber_security_7_enrolments) ))
+
+merged_data <- merge(combine_Leaving_clean_v2,combine_Enrolments,by=c("learner_id", "Cycle" ))
+
+merged_data$enrolled_at <- as.POSIXct(merged_data$enrolled_at,format="%Y-%m-%d %H:%M:%S") 
+
+merged_data$unenrolled_at <- as.POSIXct(merged_data$unenrolled_at,format="%Y-%m-%d %H:%M:%S") 
