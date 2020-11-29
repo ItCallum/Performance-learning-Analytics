@@ -113,6 +113,19 @@ ggplot(combine_Leaving_NoDups, aes(leaving_reason)) + geom_bar() + facet_wrap(~ 
 
 ```
 
+## Did anyone have a last completed week less than there last complteded step.
+
+No
+
+```{r any_werid_cross overs}
+
+head(combine_Leaving_NoDups)
+
+ (na.omit(combine_Leaving_NoDups)) %>% filter(last_completed_week_number < last_completed_week_number) 
+
+```
+
+
 ## why some many NA
 
 It's quite clear that there is a alot of NA values in the last_completed_step , last_completed_week_number, last_completed_step_number but I wanted to find out why and if there is any correlation.

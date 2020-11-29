@@ -46,3 +46,4 @@ combine_Leaving_clean$last_completed_step <- as.factor(combine_Leaving_clean$las
 
 combine_Leaving_clean_v2 <- combine_Leaving_clean %>% filter(left_at > last_completed_step_at || is.na(last_completed_step_at))
 
+time_between <- (na.omit(combine_Leaving_clean_v2)) %>% mutate(time_between_deciding_to_leave = difftime(left_at, last_completed_step_at, unit = "mins"), days_passed = floor(difftime(left_at, last_completed_step_at, unit = "days"))) 
