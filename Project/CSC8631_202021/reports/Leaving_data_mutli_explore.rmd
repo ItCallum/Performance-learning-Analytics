@@ -19,6 +19,8 @@ knitr::opts_knit$set(root.dir= normalizePath('..'))
 library('ProjectTemplate')
 load.project()
 
+source("src/SC_for_leaver_analysis.R")
+
 
 ```
 
