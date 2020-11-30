@@ -6,15 +6,21 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-
-
-setwd("~/CSC8631_202021")
-
-library('ProjectTemplate')
-load.project()
-
+# Knitr setup
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir= normalizePath('..'))
 ```
 
+
+```{r include=FALSE}
+# Load project
+
+library("ProjectTemplate")
+load.project()
+
+source("src/SC_for_clean_leaving_data.R")
+
+```
 
 ## Business understanding
 
@@ -34,10 +40,7 @@ There are 403 rows and 9 variable columns
 
 ```{r data_check}
 
-
-getwd()
-
-combine_Leaving
+getwd() 
 
 dim(combine_Leaving)
 
@@ -57,23 +60,13 @@ To be safe I decided to remove all these duplicate values
 
 ```{r ID_Var_dups}
 
-table(duplicated(combine_Leaving$id,fromLast=TRUE))
+table_dup_ID
 
-table(duplicated(combine_Leaving$learner_id,fromLast=TRUE))
+table_dup_Learner_ID
 
-duplicated_learner_id <- combine_Leaving %>% group_by(learner_id) %>% filter(n() != 1) 
+dup_learner_id_and_cycle
 
-duplicated_learner_id[order(duplicated_learner_id$learner_id),] 
-
-duplicated_learner_id  %>% group_by(learner_id,Cycle) %>% filter(n() != 1)
-
-combine_Leaving
-
-combine_Leaving %>% 
-  group_by(learner_id,Cycle) %>% 
-  filter(n()==1)
-
-
+dim(removed_duplicate_df)
 ```
 
 ## how_many_people_left 
@@ -84,8 +77,7 @@ As we can see there was almost double the amount of people leaving in cycle 5 as
 
 ```{r how_many_people_left}
 
-ggplot(combine_Leaving_NoDups, aes(Cycle)) + geom_bar() +
-geom_text(stat='count', aes(label=..count..), vjust=1)  + ggtitle("How many people left per cycle")
+bar_chart_of_user_per_cycle
 
 ```
 ## Reason for leaving
@@ -99,15 +91,27 @@ We also see that in cycle 5 the dominate reason was for some unkown issue. This 
 
 ```{r The_reason_given_to_why_people_left}
 
-ggplot(combine_Leaving_NoDups, aes(leaving_reason)) + geom_bar() + 
-  coord_flip() + ggtitle("The reasons why people left")
 
-ggplot(combine_Leaving_NoDups, aes(leaving_reason)) + geom_bar() + facet_wrap(~ Cycle, ncol = 2) + 
-  coord_flip()  + ggtitle("The reasons why people left per cycle")
+reasons_precenatge_df
 
+Reason_Prectange
 
+Reason_Count
+
+Reason_Count_cycle
 
 ```
+
+## Did anyone have a last completed week less than there last complteded step.
+
+No
+
+```{r any_werid_cross overs}
+
+Anyone_comp_week_less_than_last_step
+
+```
+
 
 ## why some many NA
 
@@ -118,38 +122,31 @@ After replacing NA with zero we can get a count of each row we find that there i
 After turning plotting the bar chart of last_completed_week_number I discovered that overlewaling these "NA"s values made up the most of the results for each cyle.
 We also see that most people leave at the start or the end, not in middle (week 2)
 
-When looking the last step people completed before people left we see that the majority of people left before they complete a step. However we can also see that there for all cycles there is a spike in the number of people leaving at step 20.
+When looking the last step people completed before people left we see that the majority of people left before they complete a step. However we can also see that there for all cycles there is a spike in the number of people leaving at step 3.2
 
 It would be interesting to find out the reason why these people left at this step (look at the reason given)
 
 ```{r how_many_people_left}
 
-combine_Leaving_NoDups_Zero <- combine_Leaving_NoDups
-
-combine_Leaving_NoDups_Zero[is.na(combine_Leaving_NoDups)] <- 0
-
-combine_Leaving_NoDups_Zero
-
-
-print("--last_completed_step--")
-table(combine_Leaving_NoDups_Zero$last_completed_step)
+Na_row_precenatage 
 
 print("--last_completed_week_number--")
-table(combine_Leaving_NoDups_Zero$last_completed_week_number)
+lcw_table
 
-ggplot(combine_Leaving_NoDups_Zero, aes(last_completed_week_number)) + geom_bar() + facet_wrap(~ Cycle, ncol = 2) + ggtitle("The amount of leavers last completed week")
+Leavers_perweek_percycle
 
-print("--last_completed_step_number--")
-table(combine_Leaving_NoDups_Zero$last_completed_step_number) 
+print("--last_completed_step--")
+lsc_table
 
-ggplot(combine_Leaving_NoDups_Zero, aes(last_completed_step_number)) + geom_bar() + ggtitle("The amount of leavers last completed step")
-ggplot(combine_Leaving_NoDups_Zero, aes(last_completed_step_number)) + geom_bar() + facet_wrap(~ Cycle, ncol = 2) + ggtitle("The amount of leavers last completed step per cycle")
+no_zero_lcs_bar
+
+no_zero_lcs_bar_cycle
 ``` 
 
 ## The NA rows, the last_completed_step , last_completed_week_number, last_completed_step_numbe
 
 When looking the last_completed_step , last_completed_week_number, last_completed_step_number rows which have NA values we found that they all contained 204 Na rows.
-When we get all the rows that conaited NA we have 204. Which tells us if a record has NA for last_completed_step there will also not be a value for last_completed_week_number and last_completed_step_number.
+When we get all the rows that conaited NA we have 204. Which tells us if a record has NA for last_completed_step there will also not be a value for last_completed_week_number and last_completed_step_number. This is 52% of the data.
 
 We also see that for each of these rows we have last_completed_step_at has no value
 
@@ -161,15 +158,13 @@ If we plot out the reasons why these NA people left we find out that the majorit
 
 ```{r how_many_people_left}
 
-
-
 Check_Na <- combine_Leaving_NoDups[rowSums(is.na(combine_Leaving_NoDups)) > 0,]
 
 Check_Na
 
-ggplot(Check_Na, aes(leaving_reason)) + geom_bar() + 
-  coord_flip() + ggtitle("The reason why people left but didnt complete a step")
+NA_Leaving_reason
 
+Check_Na_leaving_reason_bar
 
 ```
 
@@ -201,37 +196,13 @@ What is odd is that in cycle 6 is that there is a person who has apparently comp
 In cycle 7 we see that there was one person who apprently got to week 2 and then left a day or two after the course began.
 ```{r left_at_time}
 
-##combine_Leaving_NoDups[is.na(combine_Leaving_NoDups)] <- 0
-
-##combine_Leaving_NoDups
-
-##combine_Leaving_date <- combine_Leaving_NoDups %>% mutate(Date = as.Date(left_at))
-#output))
-
-##combine_Leaving_date$left_at <- as.POSIXct(combine_Leaving_date$left_at,format="%Y-%m-%d %H:%M:%S") 
-
-##combine_Leaving_date <- combine_Leaving_date %>% mutate(Time = format(ymd_hms(left_at), format = c("%H:%M:%S")))
-
-##combine_Leaving_date <- combine_Leaving_date %>% mutate(Time = strftime(left_at, format="%H"))
-
-##combine_Leaving_date
-
-##combine_Leaving_date$Time <- format(strptime(combine_Leaving_date$Time, "%H:%M:%S"), "%H:%M")  # 24-hour
-
-##combine_Leaving_date$Time <- as.POSIXct(combine_Leaving_date$Time, format = "%H:%M:%S")
-  
-## combine_Leaving_date
-
-combine_Leaving_clean
-
-combine_Leaving_clean %>% filter(Cycle == 4) %>%  ggplot(aes(x=Date, y=Time, color=last_completed_week_number)) + geom_point() +  geom_vline(xintercept = as.Date("2017-11-13"))
-combine_Leaving_clean %>% filter(Cycle == 5) %>%  ggplot(aes(x=Date, y=Time, color=last_completed_week_number)) + geom_point() +  geom_vline(xintercept = as.Date("2018-02-05"))
-combine_Leaving_clean %>% filter(Cycle == 6) %>%  ggplot(aes(x=Date, y=Time, color=last_completed_week_number)) + geom_point() +  geom_vline(xintercept = as.Date("2018-06-11"))
-combine_Leaving_clean %>% filter(Cycle == 7) %>%  ggplot(aes(x=Date, y=Time, color=last_completed_week_number)) + geom_point() + geom_vline(xintercept = as.Date("2018-09-10"))
+timeline_Cycle_4 
+timeline_Cycle_5 
+timeline_Cycle_6 
+timeline_Cycle_7 
 
 
-ggplot(combine_Leaving_clean, aes(x=Date, y=Time, color=last_completed_week_number),  yaxt = "n") + geom_point()+ facet_wrap(~ Cycle, ncol = 1) + theme(legend.position="bottom")+
-  theme(axis.text.y=element_blank(),axis.ticks.y=element_blank()) + ggtitle("Time line of users leaving and there Last completed week") +  geom_vline(xintercept = as.Date("2017-11-13")) +  geom_vline(xintercept = as.Date("2018-02-05")) +  geom_vline(xintercept = as.Date("2018-06-11")) + geom_vline(xintercept = as.Date("2018-09-10"))
+timeline_full
 
 ```
 ## Whats going on with the person who left at week 3 before the course even started
@@ -244,9 +215,9 @@ This has lead me to thinking that there may be more error like this so I will ne
 
 ```{r left_at_time}
 
-combine_Leaving_clean %>% filter(Cycle == 6 & Date < as.Date("2018-06-11") )
+before_course 
 
-combine_Leaving_clean %>% filter(learner_id == "353eaf1b-cff8-4d9c-98d4-b9a736c17e73") 
+one_person 
 
 ```
 
@@ -256,10 +227,7 @@ In the whole dataset there seems to be 8 users who left the course but still whe
 
 ```{r left_at_time}
 
-combine_Leaving_clean %>% filter(left_at < last_completed_step_at  )
-
-combine_Leaving_clean_v2
-
+impos_leaver
 
 ```
 

@@ -6,14 +6,19 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
+# Knitr setup
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir= normalizePath('..'))
+```
 
-setwd("~/CSC8631_202021")
+```{r include=FALSE}
+# Load project
 
-library('ProjectTemplate')
+library("ProjectTemplate")
 load.project()
 
-
 ```
+
 
 ## Set up
 
@@ -31,16 +36,7 @@ Seems to be a collection of the archetypes of the users.
 ```{r the_data}
 
 head(cyber_security_3_archetype_survey_responses)
-
-table(cyber_security_3_archetype_survey_responses$archetype)
-
-head(cyber_security_4_archetype_survey_responses)
-
-head(cyber_security_5_archetype_survey_responses)
-
-head(cyber_security_6_archetype_survey_responses)
-
-head(cyber_security_7_archetype_survey_responses)
+#colnames(cyber_security_3_archetype_survey_responses)
 ```
 ## cyber security enrolments
 
@@ -58,12 +54,6 @@ contianes
 ```{r the_data}
 
 head(cyber_security_1_enrolments)
-head(cyber_security_2_enrolments)
-head(cyber_security_3_enrolments)
-head(cyber_security_4_enrolments)
-head(cyber_security_5_enrolments)
-head(cyber_security_6_enrolments)
-head(cyber_security_7_enrolments)
 
 ```
 
@@ -77,9 +67,6 @@ The reason people left and when about in the course they left
 ```{r the_data}
 
 head(cyber_security_4_leaving_survey_responses)
-head(cyber_security_5_leaving_survey_responses)
-head(cyber_security_6_leaving_survey_responses)
-head(cyber_security_7_leaving_survey_responses)
 
 ```
 
@@ -92,12 +79,6 @@ The responses for the questions for that cycle
 ```{r the_data}
 
 head(cyber_security_1_question_response)
-head(cyber_security_2_question_response)
-head(cyber_security_3_question_response)
-head(cyber_security_4_question_response)
-head(cyber_security_5_question_response)
-head(cyber_security_6_question_response)
-head(cyber_security_7_question_response)
 
 ```
 

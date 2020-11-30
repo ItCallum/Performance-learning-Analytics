@@ -1,0 +1,127 @@
+---
+title: "Exploring_Leaving_multiCol"
+author: "Callum Simpson"
+date: "24/11/2020"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+# Knitr setup
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir= normalizePath('..'))
+```
+
+
+```{r include=FALSE}
+# Load project
+
+library('ProjectTemplate')
+load.project()
+
+options(scipen=999)
+
+```
+
+## Anylsis of multipale colunms 
+
+This document contains deeper dive into my now cleaned data (combine_Leaving_clean) to see what results I get when I look at multiple variables at the same time.
+This is so that I could get a better understanding of patterns and correlations in the data
+
+
+## The reason why a person left the course and there last completed step
+
+In our last set of analysis we found that there was alot of people who left the course with out completing any step (under the assumtion that all NA values are actually not completed a week).
+
+Doing a chi test we see that we get a p-value = 3.459e-07. As this is less than 0.05, we can reject the null hypothesis and conclude that the two variables leaving_reason and last_completed_week_number are independent from one another.
+
+```{r reasonleft_lastComp}
+
+combine_Leaving_clean_v2
+
+percenatge_table <- as.data.frame(table(combine_Leaving_clean_v2$leaving_reason, combine_Leaving_clean_v2$last_completed_week_number)) %>% group_by(Var2) %>% mutate(percent = (Freq/sum(Freq)) * 100 ) 
+
+chisq.test(table(combine_Leaving_clean_v2$leaving_reason, combine_Leaving_clean_v2$last_completed_week_number))
+
+ggplot(combine_Leaving_clean_v2, aes(leaving_reason), fill=leaving_reason) + geom_bar() + 
+  coord_flip() + ggtitle("The reason why people left") + facet_wrap(~ last_completed_week_number)
+
+
+ggplot(percenatge_table, aes(x="", y = percent, fill=Var1)) + 
+geom_bar(width = 1, stat = "identity") + ggtitle("The reason why people left") + facet_wrap(~ Var2)
+
+```
+
+##Time between leaving 
+
+While most of the people who leave the course don't complete a week there is still 174 people who did leave after at least starting the course.
+
+I wanted to find what the time between the last step that a user completes and when they officially leave the course. I felt that this could be useful as if we know how long it take a user to leave the course after there last step ,something could be done to prevent it. 
+
+For this a new sub table was created that works out the time in minuets between the users last step and the users leaving data. Also for simplicity i grouped the minuets into groups of how many days had passed beetween the two events.
+
+Looking at the numeric summaries we see that 
+
+We see that the median was 8509.66 minuets (roughly 6 days). This means that 50% of the people left within a week finishing there last step. 
+
+Whats is somewhat alarming is that 25% of the people left within 9 minuets from finishing there last step. The Histogram of days show that there is an overwhelming majority of people who left within a day of completing the course.
+
+This suggest that when a person wants to leave the course they might have already decided or the most recent thing they completed has put them off the course. To verify this I looked at the given reason why a user left for those who left within the day see that the reason is quite varied. There is alot of people who left who didn't give a spec reason (other / I prefer not to say). We see that there is a few people. We see that there is a high amount of people that left because that the felt that the course didn't help them or that it wouldn't help them achieve there goal. I somewhat expected this to be high as if a person didn't think that the course would help them you wouldn't expect them to stay around for long.
+
+```{r time_between_lastStep_and_Leaving}
+
+dim(time_between)
+
+(time_between)
+
+summary(as.numeric(time_between$time_between_deciding_to_leave))
+
+summary(as.numeric(time_between$days_passed))
+
+ggplot(time_between, aes(x=as.numeric(time_between$time_between_deciding_to_leave))) + geom_density() + ggtitle("Density of time between last step and leaving in minuets")
+
+
+ggplot(time_between, aes(x=as.numeric(days_passed))) +
+    geom_histogram(binwidth=1, colour="black", fill="white") + ggtitle("Histogram of days passed between a users last step and the time the offically left")
+
+ggplot(time_between %>% filter(days_passed == 0), aes(leaving_reason)) + geom_bar() + 
+  coord_flip()  + ggtitle("The reason why people left within a day")
+
+```
+
+
+## Step 3.2 
+
+As we saw in a previous analysis there was a alot of people that left in at step 3.2 in cycle 5, we also see that there seems to be alot of people drop out at step 20 in the other years when compared to all other users who completed a step.
+
+There are steps 1.1 to 1.19, 2.1 to 2.23 and 3.1 to 3.20
+
+There are some steps where on one left but there is alot of people who left at step 3.2,  looking at the courses step 3.2 is a video (Devices in the future home VIDEO (03:26)).
+
+However what should also be mentioned is that the final step is 3.20, so there is a possibility that there has been some error in recording the data (people who finished the course are accidentally put down as leaving).
+
+Looking at the reason people left at see see that its primarily "other". This dosnt really narrow the excat reason why people left It does however lets us know that it hasn't got anything to primarily do with any of the other reasons. I'm going to assume it as there might be something in the video that is making people leave. 
+
+When looking at a histogram of people leaving we see that the majority left within 24 hours. Suggesting that what ever happened caused the to leave quickly.
+
+
+```{r reasonleft_lastComp}
+
+Step_32 <- combine_Leaving_clean_v2 %>% filter(last_completed_step == 3.2)
+
+ggplot(Step_32, aes(leaving_reason), fill=leaving_reason) + geom_bar() + 
+  coord_flip() + ggtitle("The reason why people left at step 32")
+
+ggplot(Step_32, aes(leaving_reason), fill=leaving_reason) + geom_bar() + 
+  coord_flip() + ggtitle("The reason why people left at step 32") + facet_wrap(~ Cycle)
+
+ggplot(Step_32, aes(x=Date, y=Time, color=leaving_reason),  yaxt = "n") + geom_point()+ facet_wrap(~ Cycle, ncol = 1) + theme(legend.position="bottom")+
+  theme(axis.text.y=element_blank(),axis.ticks.y=element_blank()) + ggtitle("Time line of users leaving and there Last completed week") +  geom_vline(xintercept = as.Date("2017-11-13")) +  geom_vline(xintercept = as.Date("2018-02-05")) +  geom_vline(xintercept = as.Date("2018-06-11")) + geom_vline(xintercept = as.Date("2018-09-10"))
+
+time_between %>% filter(last_completed_step == 3.2)
+
+ggplot(time_between %>% filter(last_completed_step == 3.2), aes(x=as.numeric(days_passed))) +
+    geom_histogram(binwidth=1, colour="black", fill="white") + ggtitle("Histogram of days passed between a users last step and the time the offically left")
+
+```
+
