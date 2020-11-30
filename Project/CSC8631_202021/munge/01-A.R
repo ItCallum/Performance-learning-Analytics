@@ -56,6 +56,7 @@ cyber_security_7_enrolments <- cyber_security_7_enrolments  %>% mutate(Cycle = 7
 combine_Enrolments <- do.call("rbind", list((cyber_security_4_enrolments),(cyber_security_5_enrolments),
                                          (cyber_security_6_enrolments),(cyber_security_7_enrolments) ))
 
+
 merged_data <- merge(combine_Leaving_clean_v2,combine_Enrolments,by=c("learner_id", "Cycle" ))
 
 merged_data$enrolled_at <- as.POSIXct(merged_data$enrolled_at,format="%Y-%m-%d %H:%M:%S") 

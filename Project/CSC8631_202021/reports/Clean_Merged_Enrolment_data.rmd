@@ -20,16 +20,7 @@ knitr::opts_knit$set(root.dir= normalizePath('..'))
 library('ProjectTemplate')
 load.project()
 
-source("src/SC_for_clean_enroled_data.R")
-
-```
-
-
-## Leave data base vs enrolled
-
-```{r cars}
-
-df_leave_enrolled
+source("src/SC_for_clean_enroled.R")
 
 ```
 
@@ -43,6 +34,74 @@ We see that there are 1279 cases of people with unenrolled_at dates.
 How_many_unerolled
   
 ```
+
+
+## Why so many Unenrolled when compared to the users that are 
+
+We see that the enrolled data had over 1,279 rows with an unenrolled_at date.
+
+However there was 380 records of users leavers reports. 
+
+In previous analysis we see that the most the user leaver reports where in the 5th cycle. This would suggest that most of the people that left would be in cycle 5. However this isn't the case as we can see the majority of people with unenrolment dates are in the 4th cycle.  
+
+I wanted to visually compared the two set of leaving data, the enrolled data with an unenrolled_at date and the leavers response data set to see what they would look like against one another. We find something interesting with by doing this. What we see is that there as the cycles go on there is alot less people leaving so the difference between the amount of unrolled_at and leavers response becomes smaller. What we also see is that alot of cycles have people unrolling surprisingly late after the course (for example there are people in the 4th cycle that unenrolled in the 7th cycle)
+
+```{r cars}
+
+Unenrolled_combined <- combine_Enrolments[!(is.na(combine_Enrolments$unenrolled_at) | combine_Enrolments$unenrolled_at==""), ]
+
+table(Unenrolled_combined$role)
+
+table(Unenrolled_combined$Cycle)
+
+Unenrolled_combined
+
+Unenrolled_combined$enrolled_at <- as.POSIXct(Unenrolled_combined$enrolled_at,format="%Y-%m-%d %H:%M:%S") 
+
+Unenrolled_combined$unenrolled_at <- as.POSIXct(Unenrolled_combined$unenrolled_at,format="%Y-%m-%d %H:%M:%S") 
+
+Unenrolled_combined <- Unenrolled_combined %>% mutate(Date = as.Date(unenrolled_at))
+
+Unenrolled_combined <- Unenrolled_combined %>% mutate(Time = strftime(unenrolled_at, format="%H"))
+
+timeline_full <- ggplot(Unenrolled_combined, aes(x=Date, y=Time),  yaxt = "n") +  geom_point() + geom_point(data = merged_data, colour = "red") + facet_wrap(~ Cycle, ncol = 1) + theme(legend.position="bottom") +
+  theme(axis.text.y=element_blank(),axis.ticks.y=element_blank()) + ggtitle("Visual comparison of unenrolled data vs leaver responce") +  geom_vline(xintercept = as.Date("2017-11-13")) +  geom_vline(xintercept = as.Date("2018-02-05")) +  geom_vline(xintercept = as.Date("2018-06-11")) + geom_vline(xintercept = as.Date("2018-09-10"))
+
+timeline_full
+```
+## Did anyone enrole after they left
+
+No
+
+```{r pressure, echo=FALSE}
+
+merged_data %>% filter(left_at < enrolled_at)
+
+```
+
+
+## Anything fishy with the enrollment data?
+
+As we saw with the Visual comparison of unrolled data vs leaver response along a time line we see that there is a lot of people unenrolling months after there course had ended. I thought (though unlikely) that this may be an error in the data being recorded (i.e people are being recorded in one cycles database when they actually attended another cycle). I decided to check when people enrolled for a course. If people had enrolled way after that cycle ended then there had obviously had been some issues. 
+
+Looking at the time scale of enrollment dates we see this doesn't hold, there is no instance where a person enroles for a course after it had finished. What is weird is that there does seem to be some overlap in enrollment times. For example there are people who enroll just before cycle 4 ended and at the same time there are people who are enrolling for cycle 5. This may mean that a user can apply for course whenever they want to and then have as long as they want to complete it.
+
+```{r pressure, echo=FALSE}
+
+Unenrolled_combined$enrolled_at <- as.POSIXct(Unenrolled_combined$enrolled_at,format="%Y-%m-%d %H:%M:%S") 
+
+Unenrolled_combined <- Unenrolled_combined %>% mutate(Date = as.Date(enrolled_at))
+
+Unenrolled_combined <- Unenrolled_combined %>% mutate(Time = strftime(enrolled_at, format="%H"))
+
+ ggplot(Unenrolled_combined, aes(x=Date, y=Time),  yaxt = "n") +  geom_point()  + facet_wrap(~ Cycle, ncol = 1) + theme(legend.position="bottom") +
+  theme(axis.text.y=element_blank(),axis.ticks.y=element_blank()) + ggtitle("Enrollment dates") +  geom_vline(xintercept = as.Date("2017-11-13")) +  geom_vline(xintercept = as.Date("2018-02-05")) +  geom_vline(xintercept = as.Date("2018-06-11")) + geom_vline(xintercept = as.Date("2018-09-10"))
+
+
+```
+
+Assumption As we see in the date set we have people that have people with the 
+
 
 ## merged_data
 
@@ -77,6 +136,7 @@ table(merged_data$country)
 
 table(merged_data$age_range)
 
+table(merged_data$role)
 
 ```
 
@@ -161,15 +221,6 @@ Doing a duplicate check we see that there are infarct 114 occurance of duplicate
 
 ```
 
-## Did anyone enrole after they left
-
-No
-
-```{r pressure, echo=FALSE}
-
-merged_data %>% filter(left_at < enrolled_at)
-
-```
 
 ## Cleaned data
 
