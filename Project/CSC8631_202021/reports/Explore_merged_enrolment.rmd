@@ -1,0 +1,95 @@
+---
+title: "Explore_merged_enrolment"
+author: "Callum Simpson"
+date: "30/11/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+# Knitr setup
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir= normalizePath('..'))
+```
+
+
+```{r include=FALSE}
+# Load project
+
+library('ProjectTemplate')
+load.project()
+
+source("src/SC_for_merged_analysis.R")
+
+```
+
+
+This is the analysis of the merged data frame 
+
+We now have data about a the user that have left a review so we might be able to get a better idea of exactly why people leave and who they are.
+
+## Gender
+
+Taking a look of the users data. We see that one of the sets of data is gender. I wanted to see if data had anything to do with the reason why people leave.
+
+Looking at all the people in the cycles we see that number of total registered females and males are roughly the same, there are 5 others and allot of people that didn't identify themselves. 
+
+Compering the amount of people that enrolled to the people that gave a leaving response we see that females had a higher chance of leaving over males however males where more likely to give a response as to why they left, though only by a couple of percent). 
+
+When looking at reasons for leaving we see that the reason for all categories are other, I prefer not to say and i don't have enough time.
+
+
+```{r pressure, echo=FALSE}
+
+leave_V_complete_gender
+
+Reason_gender
+
+```
+
+## Age range
+
+What we see when looking at the table of results if that the older the user is, the more likely they will give a reason as to why they leave.
+
+Looking at the reason we see that there is a spread of responses in each age range for them leaving. With. I dont have enough time being the main one as the age range increases.
+```{r pressure, echo=FALSE}
+
+leave_V_complete_age_range
+
+Reason_age_range
+
+```
+
+## employment status
+
+Next I wanted to look at the what the users employment_status to see if the user was employed effected there reason for leaving.
+
+When looking at percentage data we see that the majority of these people are unknown. What we also see if that the people who where not working had the highest leaving rate where as those who are retired had the lowest leaving rate. Again when looking at the spefic reason why people left we see that it is majorly made up by  Other , I pefer not to say, and i dont have enough time.
+
+```{r pressure, echo=FALSE}
+
+leave_V_complete_employment_status
+
+Reason_gender_employment_status
+
+```
+
+## Time between enrolling and leaving
+
+Whilst not exactly the main reason I merged the enrollment and leaving data together, i did give me the oppurinty to find out the time between when a user joined the course and then left the course. Finding out the typical time for someone to leave the course could be interesting as it means that measure could be put in place to try and stop this.
+
+As we can alarmingly see, from the histogram and the box plot, a lot of the people left within a day of enrolling the.
+
+When looking at the reason why we see that there is alot of people who say that they left for other reasons.
+
+```{r detected_country, echo=FALSE}
+
+
+summary(as.numeric(time_bet_enroll_leave$time_to_leave))
+
+time_to_leave_min
+
+Histogram_time
+
+Reason_day_one
+
+```

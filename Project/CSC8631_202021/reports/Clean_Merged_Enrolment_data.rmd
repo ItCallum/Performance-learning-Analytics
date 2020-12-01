@@ -100,7 +100,7 @@ Unenrolled_combined <- Unenrolled_combined %>% mutate(Time = strftime(enrolled_a
 
 ```
 
-Assumption As we see in the date set we have people that have people with the 
+Assumption As we see in the date set we have people that have people with an unenrollment date and those who havnt. Based on this I am going to assume the following. People without any data are still working on the material or have just left it without formally leaving (they just logged off one day and havnt come back). This means that i will assume that the unenrollment date is for both those who have left the course and those who have completed the course.
 
 
 ## merged_data
