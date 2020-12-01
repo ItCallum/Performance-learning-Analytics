@@ -47,7 +47,7 @@ Newcastle university has gathered information about the users that have attended
 
 Learning Analytics is a rapidly-growing application area for Data Science, defined as “the measurement, collection, analysis and reporting of data about learners and their contexts, for purposes of understanding and optimizing learning and the environment in which it occurs”
 
-As there is no formal requirement on the question that the university wants to be investiagted I decided that I wanted to get a better understanding of why a user leaves the course. I feel like this would be a good measure of engagement as I could potentially find common reason and trends that are causing to leave the course meaning my findings could help improve the course to keep users engaded and lower the amount of people that leave the course. 
+As there is no formal requirement on the question that the university wants to be investigated I decided that I wanted to get a better understanding of why a user leaves the course. I feel like this would be a good measure of engagement as I could potentially find common reason and trends that are causing to leave the course meaning my findings could help improve the course to keep users engaged and lower the amount of people that leave the course. 
 
 Because of this my business object will be "give useful insights into why people decide to leave the course"
 
@@ -68,4 +68,127 @@ My aim is to
 - Have roughly two weeks to do my analysis 
 - get my analysis done by the 1st of December.  
 
-I am planning to use and R project with a project template to ensure that my code can be reproducible
+I am planning to use and R project with a project template to ensure that my code can be reproducible.
+
+## Data understanding
+
+### The Collect initial data 
+
+The data I have been given is a set of different datasets relating to a different factor of the course. We have 7 of these "set" as we information about 7 runs of this course. New modifed data based off / using this data will be created automatically by my project template. I will say when its relevant when this has been done. 
+
+### Description of all data  
+
+The following will go over all the data collected and briefly outlies what is stored in each dataset.
+
+#### Archetype survey responses
+
+Only data for cycle 3 to 7 seems to be recorded. It a collection of the archetypes of the users with 4 columns.
+
+id <int> - user id for cycle
+learner_id <chr> - user id 
+responded_at <chr> - the time a user responded
+archetype <chr> - what Archetype they define themselves as
+
+#### Cyber security enrolments
+
+For all cycles,The enrollment data for each user. Contains 13 rows. Note worth rows are
+
+id <int> - user id for cycle
+learner_id <chr> - user id 
+role <chr> - role of the person one the course 
+gender <chr> - User identifed gender
+country <chr> - give users country
+age <chr> - ages done in age range brackets
+highest education <chr> - Highest education.
+It also contianes if they are employed and where 
+
+#### cyber leaving results
+
+Only for cycles 4 to 7. The reason people left and when about in the course they left.
+
+id <int> - user id for cycle
+learner_id <chr> - user id 
+
+left_at <chr> - time and date when a user left the course
+leaving_reason <chr> - the reason why the user left given from a set selection of given options
+last_completed_step_at <chr> - time and date of the users last step
+last_completed_step <dbl> - what was the users last step
+last_completed_week_number <int> - what was the last week a user got to 
+last_completed_step_number <int> - what was the users last step the completed
+
+
+#### question response
+
+For all cycles. The responses for the questions given throughout the course.
+
+learner_id <chr> - user id 
+quiz_question <chr> - the full question numner
+question_type <chr> - the type of question
+week_number <int> - the week number the question appread
+step_number <int> - the step the question apperead
+question_number <int> - the question sub number
+response <chr> - users answers
+cloze_response <lgl> - answer approximated
+submitted_at <chr> - The time a user submitted the question
+correct <chr> - Was the user correct.
+
+#### Step activity
+
+For all cycles. When a user started and finished that step
+
+learner_id <chr> - user id 
+step <dbl> - week + step number
+week_number <int> - the week number
+step_number <int> - the step number
+first_visited_at <chr> - When the user first visited the step
+last_completed_at <chr> - when the user finished the step
+
+#### Team members
+
+only in cycles 2 to 7. Contians information about peoples rows.
+
+
+id <chr> - users id
+first_name <chr> - users first name
+last_name <chr> - users last name
+team_role <chr> - team role is the role whole of the person in the team
+user_role <chr> - user role seems to be role of what the user 
+
+#### weekly_sentiment_survey_responses
+
+Seems to be only cycles 6 and 7. A brief survay about how people are finding the course
+
+id <int> - user ID
+responded_at <chr> - the time the user responded.
+week_number <int> - the week 
+experience_rating <int> - out of 5 how did the user rate the week
+reason <chr> - a comment on their opinion
+
+####video_stats
+
+For all cycles. Information about the videos. There are 23 columns so instead of listing everything out this data set contianes
+
+how long people are watching a video
+where they are watching it 
+what people are watching it on
+
+
+### Overview
+
+As you can see we have alot of data at hand to help us answer the question. Each dataset has an ID function so that can be our meta data that can be used to link all the dataset together. Exploring the dataset its clear that not all cycles contain the same recorded data as others. This has lead me to make my first assumption.
+
+## Assumption One
+
+Not all data was recorded in each cycle as some cycles contain empty datafile. I am assuming that this is because as the cycles went on new aspects user interaction where recorded.
+
+## Choosing the right data
+
+After doing a scan over all the data I decided on what I was going to use. As i decided to look into why user left the course and obvious start would be by looking at the the courses leaving results to see what users where saying.
+
+As I had 4 datasets to work with (cycles 4 to 7) I merged them together but made sure that i included an new column called Cycle <dbl> which contains the cycle number that that row of data came from. 
+
+The next two sections on exploring data and verify data quality will be on this dataset.
+
+
+
+.
