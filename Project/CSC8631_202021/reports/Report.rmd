@@ -2,7 +2,11 @@
 title: "Report"
 author: "Callum Simpson"
 date: "01/12/2020"
-output: pdf_document
+output:
+  pdf_document: default
+  word_document: default
+  html_document:
+    df_print: paged
 ---
 
 ```{r setup, include=FALSE}
@@ -212,7 +216,7 @@ From a check for duplicates we find that for the most part are the same learner 
 
 If we look at duplaices of learner_id and cycle we find 15 occurrences. For the most part we find alot of these duplicates are within a few minuets of each other, However some of these dates are days out. 
 
-```{r ID_Var_dups}
+```{r All_ID_Var_dups}
 dup_learner_id_and_cycle %>% select(id,learner_id,left_at,Cycle)
 ```
 
@@ -223,7 +227,7 @@ To be safe I decided to remove all these duplicate values leaving us with `nrows
 
 Next I wanted to see how many people left each cycle so i decided to make a barplot to check the counts.
 
-```{r how_many_people_left}
+```{r how_many_people_left_cycle}
 
 bar_chart_of_user_per_cycle
 
@@ -243,6 +247,7 @@ As we can see the reason why people leave the course we can try to find the main
 Reason_Count
 
 ```
+
 Looking at all the results put together we see that the majority of the user left as they don't have enough time or for another unknown reason (other). We see that there is a few more people saying that they left because the course was too difficult than there is saying the course is too easy, this suggest that one the whole people seem to find the course hardier than easier. 
 
 We also see that there inst any NA values suggesting that the data is complete and every row containes a reason for leaving.
@@ -254,11 +259,10 @@ The last completed step tells us how far a user made it through the course. I ex
 
 ```{r last_completed_step}
 
-print("--last_completed_week_number--")
 table(combine_Leaving_NoDups$last_completed_step, useNA="always")
 
 ```
-We see that there are 32 individual steps though out the database. Looking at the table of results we see that there the is alot of (over 50%) NA values in this data set suggesting that the quality may not be that create.Whilist we see a few people leaving at the start we see an stark increase at step 3.2 which suggest that there is somthing at that week that is causing people to leave.
+We see that there are 32 individual steps though out the database. Looking at the table of results we see that there the is alot of (over 50%) NA values in this data set suggesting that the quality may not be that create. Whilist we see a few people leaving at the start we see an stark increase at step 3.2 which suggest that there is somthing at that week that is causing people to leave.
 
 #### last_completed_week_number
 
@@ -266,7 +270,6 @@ I decide to keep the last week number in as it would be useful to group all of t
 
 ```{r how_many_people_left}
 
-print("--last_completed_week_number--")
 table(combine_Leaving_NoDups$last_completed_week_number, useNA="always")
 
 ```
@@ -280,4 +283,175 @@ For the the rest of my analysis i will likely ignore this column as it step numb
 
 #### Left at
 
-The last column to check was the leave date. A quick check of this colum showed no error.
+The last column to check was the leave date. A quick check of this column showed that there was no error and each user had a leaving time.
+
+## Data preparation
+
+### Dataset 
+
+The data set that I will use is the dataset of the combined leavers responses. As we saw in the data exploration we have some issues with the data that I will need to explore and try to fix. The following section the will be exploring this dataset and cleaning it.
+
+#### The NA rows in the last_completed_step and last_completed_week_number
+
+As the last_completed_step and last_completed_week_number are more meant to represent week titles I decided to convert them from doubles to factors so that i could better utilize the data. I also did the same to the column cycle.
+
+When looking the last_completed_step and the last_completed_week_number columns they both contained 204 Na rows. As they both are the same value this suggest that if one column is NA. 
+
+```{r na_rows}
+
+dim(combine_Leaving_NoDups[rowSums(is.na(combine_Leaving_NoDups)) > 0,])
+
+```
+
+When we get all the rows that conaited NA we have 204. Which tells us if a record has NA for last_completed_step there is also not be a value for last_completed_week_number and last_completed_step_number. As 204 rows is 52% of the data I wanted to think of a reason why this may be the case.
+
+My assumption is that either
+- something has wrong with data collection
+- These people have left the course before they had done anything on the course so a week value wasnt recorded
+
+If we plot out the reasons why these NA people left we find out that the majority left due to them not having enough time or for other reasons. If these people NA people are infact leaving at the start of the course this results sort of makes sense (they joined the course but discovered they didnt have much time to work on it so they to leave at the start)
+
+```{r Check_Na_leaving_reason_bar}
+
+  Check_Na_leaving_reason_bar
+
+```
+
+## Assumption two
+
+All NA values in the last_completed_step and last_completed_week_number column are actually week "zero" (didn't do anything on the course). From now on all NA values will be converted to Zero.
+
+
+#### The day people left
+
+Another thing i wanted to look was left_at, This is moment in time where a person left there course.
+
+For this i had to do some work on the database. I have changed left_at to a actual time step and then split it onto two new columns Date and time. This was so I could create an upcoming plot that I believe would be useful. The left_at value is very spefic moment in time so to really understand the moments people left we are going to need to split the result into there original cycles (as they leave one after the another).
+
+These are the start dates for each cycle
+
++ Cycle 4 - 13 Nov 2017
++ Cycle 5 - 5 Feb 2018 
++ Cycle 6 - 11 Jun 2018 
++ Cycle 7 - 10 Sep 2018 
+
+Using this information I plotted the following graph looking at the time at which people left and the week number. I expect that as the weeks in a cycle go on we should see distinict groups week numbers leaving. The Y axis is the hour someone left, This was done to help avoid overlaps of points (dosnt add anything to the graph)
+
+```{r timeline_full}
+
+  timeline_full
+
+```
+
+When adding a line of each of the course start dates we see that there seems to be alot of people dropping out at the start of each cycle.
+We also see that that in cycle 6 and 7 there where a few people that dropped out before the course began. 
+
+What is odd is that in cycle 6 is that there is a person who has apparently completed week 3 before the course even began which is odd.
+In cycle 7 we see that there was one person who apparently got to week 2 and then left a day or two after the course began.
+
+#### Whats going on with the person who left at week 3 before the course even started
+
+In cycle 6 we see someone left at week 3 before the course even started. How is this possible?
+
+We see this person is user 353eaf1b-cff8-4d9c-98d4-b9a736c17e73 who left the course on the 2018-05-09 03:54:35 however there last step is was done on the 2018-07-15 16:53:37 which is 2 months after they left. This should be possible. This user only has one record in this data so an error has occurred in the recording this value. 
+
+This has lead me to thinking that there may be more error like this so I will need to do a check for more of these "impossible" leavers 
+
+```{r left_at_time}
+
+before_course 
+
+one_person 
+
+```
+
+#### "impossible" leavers 
+
+In the whole dataset there seems to be 8 users who left the course but still where able to complete a set after they left. As this is 8 user spread over the 4 cycles I will remove these error in order to keep the data tidy and bit less error free.
+
+```{r impossible}
+
+impos_leaver
+
+```
+#### Reason for leaving per cycle.
+
+With the data cleaned a bit more I decided that I will look into the. The reason why people left each cycle. As we saw previously alot of the leavers how left a response happened in cycle 5. I wanted to figure out why this would happened. 
+
+```{r Reason_Count_cycle}
+Reason_Count_cycle
+```
+
+If we split the results into the cycle they where achieved from we see that in cycle 6 and 7 the majority of people left because they didn't have time.
+We also see that in cycle 5 the dominate reason was for some unknown issue. This is the cycle that had the most drop outs so this suggest that this cycle contained a 'unique' issues that might of only occurred during this cycle and cause alot of people to leave.
+
+#### Weeks leaving per cycle.
+
+Next I wanted to break down how many people left in each week per cycle. I expect that there be alot of people leaving at the satrt of the course but that i would decrease as the weeks went on.
+
+```{r Leavers_perweek_percycle}
+Leavers_perweek_percycle
+```
+
+Looking at the graph we see that for all cycles, a large majority of people left without starting the course. We also see that all cycle follow the same trend 1st week , 3rd week and then the second week. There isnt alot of people that left in the second week suggesting that this week keeps its users quite engaged.
+
+#### Reason for leaving per week.
+
+As we see that throughout each cycle the amount of leavers per week is roughly the same I wanted to see what the primary reasons why people left each week.
+
+When turning the amount of responses into a graph we see the following.
+
+```{r leaving_reason_lcwn_percenatge}
+leaving_reason_lcwn_percenatge
+```
+For weeks 0,1 and 2 the main leaving reason was that the users didn't have time which makes sense. They are likely to leave the course early if they know they don't have time than try to continue.
+
+Through out all weeks we a similar balance between the number of people leaving because the course is too difficult and the course was too easy suggesting that the course has a good balance. 
+
+We see that the highest percentage "the course wasn't what I expected" occurs in cycle 1 which is what you would expected as people would join the course do a bit for the first week and that then decide that the course isnt what they expect.
+
+We see that an overwhelming majority of people left in week 3 said the reason was other, this suggest there might be something that has happened in week 3 that caused people to leave.
+
+
+####Time between leaving 
+
+While most of the people who leave the course don't complete a week there is still 174 people who did leave after at least starting the course.
+
+I wanted to find what the time between the last step that a user completes and when they officially leave the course. I felt that this could be useful as if we know how long it take a user to leave the course after there last step ,something could be done to prevent it. 
+
+For this a new sub table was created that works out the time in minuets between the users last step and the users leaving data. Also for simplicity I grouped the minuets into groups of how many days had passed between the two events.
+
+When working out the times between the two events but rounded down to number days that passed we see the following.
+
+```{r days_passed_summary}
+summary(as.numeric(time_between$days_passed))
+```
+
+We see the median number of days that had passed was 5. This means that that half the people leave the course within one working week of completing there last step. What is alarming is that 25% of the people leave within the 24 hours of completing there last cycle step. Suggesting that most of the time the user dosnt need much time to think about leaviing they finish the last step and then idmedantly think about leaving.
+
+Visually representing this as a histogram show us the following.
+
+```{r Histogram_Leave_time}
+Histogram_Leave_time 
+```
+
+We can see that most of the the people leave within 24 hours for them completing there last step. This backs up the idead that when a user wanst to leave they are most likely do this after finishing a step. Looking a the reasons why. we see
+
+```{r reason_Leave_time}
+Leave_time_reason 
+```
+There is alot of people who left who didn't give a spec reason (other / I prefer not to say). We see that there is a few people. We see that there is a high amount of people that left because that the felt that the course didn't help them or that it wouldn't help them achieve there goal. I somewhat expected this to be high as if a person didn't think that the course would help them you wouldn't expect them to stay around for long.
+
+## Why is there an increase in people leaving in week 3
+
+I really wanted to see why people where leaving in the 3rd week. When we did a count of the number of people who left at each step we saw that there was alot of people that left within the first few steps but there also seemed to be alot of people leaving at step 3.2. This happened in all cycles.
+
+Looking at the courses step 3.2 is a video (Devices in the future home VIDEO (03:26)).
+
+However what should also be mentioned is that the final step is 3.20, so there is a possibility that there has been some error in recording the data (people who finished the course are accidentally put down as leaving).
+
+
+```{r reason_Leave_time}
+Reason_Step_32 
+```
+Looking at the reason given we see that the reason is overwhelimily "other". This suggest that there is a really unique issue with this video that is causing people to leave. Maybe its offending people? This is proably 

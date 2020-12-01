@@ -2,7 +2,9 @@
 title: "Why_do_people_drop_out"
 author: "Callum Simpson"
 date: "21/11/2020"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -174,7 +176,6 @@ The last column we should look at is the left_at. This is moment in time where a
 
 For this i had to do some work on the database (now called combine_Leaving_clean). I have changed left_at to a actual time step and then split it onto two new columns Date and time. This was so I could create an upcoming plot that I believe would be useful. I also turned last_completed_step,last_completed_week_number
 ,last_completed_step_number and Cycle.
-
 
 The left_at value is very spefic moment in time. Also to really understand the moments people left we are going to need to split the result into there original cycles (as they leave one after the another) 
 

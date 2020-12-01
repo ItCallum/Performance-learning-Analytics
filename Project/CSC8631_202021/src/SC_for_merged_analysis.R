@@ -19,7 +19,7 @@ leave_V_complete_age_range <- data.frame(table(combine_Enrolments$age_range) ,ta
   rename(age_range = Var1, Total_reg = Freq, unenrolled = Freq.1, Leavers = Freq.2) %>% mutate(PercenatgeLeft = (unenrolled / Total_reg)* 100 , PercenatgeComplained = (Leavers / unenrolled)* 100  )
 
 drop <- c("Var1.1","Var1.2")
-leave_V_complete_age_range = leave_V_complete_age_range[,!(names(leave_V_complete) %in% drop)]
+leave_V_complete_age_range = leave_V_complete_age_range[,!(names(leave_V_complete_age_range) %in% drop)]
 
 
 Reason_age_range <- ggplot(merged_data, aes(leaving_reason)) + geom_bar() + facet_wrap(~ age_range, ncol = 4) + 
@@ -31,7 +31,7 @@ leave_V_complete_employment_status <- data.frame(table(combine_Enrolments$employ
   rename(age_range = Var1, Total_reg = Freq, unenrolled = Freq.1, Leavers = Freq.2) %>% mutate(PercenatgeLeft = (unenrolled / Total_reg)* 100 , PercenatgeComplained = (Leavers / unenrolled)* 100  )
 
 drop <- c("Var1.1","Var1.2")
-leave_V_complete_employment_status = leave_V_complete_employment_status[,!(names(leave_V_complete) %in% drop)]
+leave_V_complete_employment_status = leave_V_complete_employment_status[,!(names(leave_V_complete_employment_status) %in% drop)]
 
 
 Reason_gender_employment_status <- ggplot(merged_data, aes(leaving_reason)) + geom_bar() + facet_wrap(~ employment_status, ncol = 3) + 
@@ -43,7 +43,7 @@ time_bet_enroll_leave <- merged_data %>% mutate(time_to_leave = floor(difftime( 
 
 summary(as.numeric(time_bet_enroll_leave$time_to_leave))
 
-time_to_leave_min <- ggplot(time, aes(x = "" , y=as.numeric(time_to_leave))) +
+time_to_leave_min <- ggplot(time_bet_enroll_leave, aes(x = "" , y=as.numeric(time_to_leave))) +
   geom_violin() + geom_boxplot(width = 0.5) +  ggtitle("Histogram of days passed between a users last step and the time the offically left")
 
 time_to_leave_min
@@ -53,7 +53,7 @@ Histogram_time <- ggplot(time_bet_enroll_leave, aes(x = as.numeric(time_to_leave
 
 Histogram_time
 
-Reason_day_one <- ggplot(time %>% filter(time_to_leave == 0)
+Reason_day_one <- ggplot(time_bet_enroll_leave %>% filter(time_to_leave == 0)
                          , aes(leaving_reason)) + geom_bar() +  
   coord_flip()  + ggtitle("The reasons why people left with a day")
 
