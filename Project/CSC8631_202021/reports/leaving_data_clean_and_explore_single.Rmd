@@ -40,7 +40,7 @@ There are 403 rows and 9 variable columns
 
 ```{r data_check}
 
-getwd() 
+combine_Leaving
 
 dim(combine_Leaving)
 

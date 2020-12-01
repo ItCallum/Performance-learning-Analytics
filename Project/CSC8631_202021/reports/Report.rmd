@@ -185,10 +185,99 @@ Not all data was recorded in each cycle as some cycles contain empty datafile. I
 
 After doing a scan over all the data I decided on what I was going to use. As i decided to look into why user left the course and obvious start would be by looking at the the courses leaving results to see what users where saying.
 
-As I had 4 datasets to work with (cycles 4 to 7) I merged them together but made sure that i included an new column called Cycle <dbl> which contains the cycle number that that row of data came from. 
+As I had 4 datasets to work with (cycles 4 to 7) I merged them together but made sure that i included an new column called Cycle <dbl> which contains the cycle number that that row of data came from. This made a dataframe of `nrow(combine_Leaving)` rows.
+
 
 The next two sections on exploring data and verify data quality will be on this dataset.
 
+## ExploreData
+
+### ID variables 
+
+As I merged 4 datasets together i wanted to make sure that there wast any weird duplicates or any in cycle duplication for our 2 variables are relating id.
+
+```{r ID_Var_dups}
+
+print("Any Duplcate ID")
+table_dup_ID
+
+print("Any Duplcate Learner ID")
+table_dup_Learner_ID
+
+```
+
+We see that id has no duplicates but learner_id did contain some duplicate ids.
+
+From a check for duplicates we find that for the most part are the same learner id but in a different cycle suggesting that we have a few people who are leaving deciding to leave one cycle but rejoining another cycle only to leave again later. This is fine as its same user different cycles and not same user same cycle.
+
+If we look at duplaices of learner_id and cycle we find 15 occurrences. For the most part we find alot of these duplicates are within a few minuets of each other, However some of these dates are days out. 
+
+```{r ID_Var_dups}
+dup_learner_id_and_cycle %>% select(id,learner_id,left_at,Cycle)
+```
+
+To be safe I decided to remove all these duplicate values leaving us with `nrows(removed_duplicate_df)` rows to work with.
 
 
-.
+### How many people left each cycle 
+
+Next I wanted to see how many people left each cycle so i decided to make a barplot to check the counts.
+
+```{r how_many_people_left}
+
+bar_chart_of_user_per_cycle
+
+```
+As there is no NA coloum we can safely ensure that every row has be assigned to a cycle.
+
+As we can see there was almost double the amount of people leaving in cycle 5 as compared to other cycles suggesting that either 
+  + a) alot of people joined in cycle 5 than compared to the other years
+  + b) Somthing caused alot of people to leave this year than compared to the other years
+  
+### Reason for leaving
+
+As we can see the reason why people leave the course we can try to find the main reason for people leaving. 
+
+```{r The_reason_given_to_why_people_left}
+
+Reason_Count
+
+```
+Looking at all the results put together we see that the majority of the user left as they don't have enough time or for another unknown reason (other). We see that there is a few more people saying that they left because the course was too difficult than there is saying the course is too easy, this suggest that one the whole people seem to find the course hardier than easier. 
+
+We also see that there inst any NA values suggesting that the data is complete and every row containes a reason for leaving.
+
+
+#### last_completed_step 
+
+The last completed step tells us how far a user made it through the course. I expect that the majortity of the peole leave at the start.
+
+```{r last_completed_step}
+
+print("--last_completed_week_number--")
+table(combine_Leaving_NoDups$last_completed_step, useNA="always")
+
+```
+We see that there are 32 individual steps though out the database. Looking at the table of results we see that there the is alot of (over 50%) NA values in this data set suggesting that the quality may not be that create.Whilist we see a few people leaving at the start we see an stark increase at step 3.2 which suggest that there is somthing at that week that is causing people to leave.
+
+#### last_completed_week_number
+
+I decide to keep the last week number in as it would be useful to group all of the week steps together so we can record how far a user got through the course by large milestones and not small steps. last_completed_week_number has a lot of different factors so visualizing the results may be difficult.
+
+```{r how_many_people_left}
+
+print("--last_completed_week_number--")
+table(combine_Leaving_NoDups$last_completed_week_number, useNA="always")
+
+```
+Looking at the table of results we see that there the is alot of (over 50%) NA values in this data set. What is interesting is that there the same amount of NA values that where found in the last_completed_step suggesting that there might be some similarities in these NA values which might be worth looking into to.
+
+Not looking at the NA we see that the first week has alot of people leaving and not that many leaving in the secound week.
+
+#### last_completed_step_number
+
+For the the rest of my analysis i will likely ignore this column as it step number if each week. As we have 3 weeks of content then we will have duplicate step number values for each step so its will be likely that is will cause confusion down the line. The last_completed_step contains the week and step number so it wouldn't have this issue. Because of that I will not need this column.
+
+#### Left at
+
+The last column to check was the leave date. A quick check of this colum showed no error.
