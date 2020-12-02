@@ -93,7 +93,6 @@ Only for cycles 4 to 7. The reason people left and when about in the course they
 
 + id <int> - user id for cycle
 + learner_id <chr> - user id 
-
 + left_at <chr> - time and date when a user left the course
 + leaving_reason <chr> - the reason why the user left given from a set selection of given options
 + last_completed_step_at <chr> - time and date of the users last step
@@ -171,7 +170,7 @@ The next two sections on exploring data and verify data quality will be on this 
 ### ID variables 
 As I merged 4 datasets together i wanted to make sure that there wast any weird duplicates or any in cycle duplication for our 2 variables are relating id.
 
-```{r ID_Var_dups}
+```{r ID_Var_dups, echo=FALSE}
 
 table_dup_ID
 
@@ -190,9 +189,9 @@ To be safe I decided to remove all these duplicate values leaving us with `r nro
 ### How many people left each cycle 
 Next I wanted to see how many people left each cycle so i decided to make a barplot to check the counts.
 
-```{r how_many_people_left_cycle}
+```{r how_many_people_left_cycle, echo=FALSE}
 
-bar_chart_of_user_per_cycle
+table(combine_Leaving_NoDups$Cycle)
 
 ```
 As there is no NA coloum we can safely ensure that every row has be assigned to a cycle.
@@ -204,7 +203,7 @@ As we can see there was almost double the amount of people leaving in cycle 5 as
 ### Reason for leaving
 As we can see the reason why people leave the course we can try to find the main reason for people leaving. 
 
-```{r The_reason_given_to_why_people_left}
+```{r The_reason_given_to_why_people_left, echo=FALSE, fig.height = 3}
 
 Reason_Count
 
@@ -218,7 +217,7 @@ We also see that there inst any NA values suggesting that the data is complete a
 #### last_completed_step 
 The last completed step tells us how far a user made it through the course. I expect that the majortity of the peole leave at the start.
 
-```{r last_completed_step}
+```{r last_completed_step, echo=FALSE}
 
 table(combine_Leaving_NoDups$last_completed_step, useNA="always")
 
@@ -228,7 +227,7 @@ We see that there are 32 individual steps though out the database. Looking at th
 #### last_completed_week_number
 I decide to keep the last week number in as it would be useful to group all of the week steps together so we can record how far a user got through the course by large milestones and not small steps. last_completed_week_number has a lot of different factors so visualizing the results may be difficult.
 
-```{r how_many_people_left}
+```{r how_many_people_left, echo=FALSE}
 
 table(combine_Leaving_NoDups$last_completed_week_number, useNA="always")
 
@@ -253,7 +252,7 @@ As the last_completed_step and last_completed_week_number are more meant to repr
 
 When looking the last_completed_step and the last_completed_week_number columns they both contained 204 Na rows. As they both are the same value this suggest that if one column is NA then the other will be NA. 
 
-```{r na_rows}
+```{r na_rows, echo=FALSE}
 
 dim(combine_Leaving_NoDups[rowSums(is.na(combine_Leaving_NoDups)) > 0,])
 
@@ -267,7 +266,7 @@ My assumption is that either
 
 If we plot out the reasons why these NA people left we find out that the majority left due to them not having enough time or for other reasons. If these people NA people are infact leaving at the start of the course this results sort of makes sense (they joined the course but discovered they didnt have much time to work on it so they to leave at the start)
 
-```{r Check_Na_leaving_reason_bar}
+```{r Check_Na_leaving_reason_bar, echo=FALSE, fig.height = 3}
 
   Check_Na_leaving_reason_bar
 
@@ -291,7 +290,7 @@ These are the start dates for each cycle
 
 Using this information I plotted the following graph looking at the time at which people left and the week number. I expect that as the weeks in a cycle go on we should see distinict groups week numbers leaving. The Y axis is the hour someone left, This was done to help avoid overlaps of points (dosnt add anything to the graph)
 
-```{r timeline_full}
+```{r timeline_full, echo=FALSE}
 
   timeline_full
 
@@ -317,16 +316,11 @@ This has lead me to thinking that there may be more error like this so I will ne
 
 In the whole dataset there seems to be 8 users who left the course but still where able to complete a set after they left. As this is 8 user spread over the 4 cycles I will remove these error in order to keep the data tidy and bit less error free.
 
-```{r impossible}
-
-dim(impos_leaver)
-
-```
 #### Reason for leaving per cycle.
 
 With the data cleaned a bit more I decided that I will look into the. The reason why people left each cycle. As we saw previously alot of the leavers who left a response happened in cycle 5. I wanted to figure out if there was a reason for this or if this cycle followed the trends of the other ones. 
 
-```{r Reason_Count_cycle}
+```{r Reason_Count_cycle, echo=FALSE, fig.height = 4}
 Reason_Count_cycle
 ```
 
@@ -337,7 +331,7 @@ We also see that in cycle 5 the dominate reason was for some unknown (other). Th
 
 Next I wanted to break down how many people left in each week per cycle. I expect that there be alot of people leaving at the start of the course but that it would decrease as the weeks went on.
 
-```{r Leavers_perweek_percycle}
+```{r Leavers_perweek_percycle, echo=FALSE, fig.height = 3}
 Leavers_perweek_percycle
 ```
 
@@ -349,7 +343,7 @@ As we see that throughout each cycle the amount of leavers per week is roughly t
 
 When turning the amount of responses into a graph of percentage we see the following.
 
-```{r leaving_reason_lcwn_percenatge}
+```{r leaving_reason_lcwn_percenatge, echo=FALSE, fig.height = 4}
 leaving_reason_lcwn_percenatge
 ```
 For weeks 0,1 and 2 the main leaving reason was that the users didn't have time which makes sense. They are likely to leave the course early if they know they don't have time than try to continue.
@@ -371,7 +365,7 @@ For this a new sub table was created that works out the time in minuets between 
 
 When working out the times between the two events but rounded down to number days that passed we see the following.
 
-```{r days_passed_summary}
+```{r days_passed_summary, echo=FALSE}
 summary(as.numeric(time_between$days_passed))
 ```
 
@@ -379,13 +373,13 @@ We see the median number of days that had passed was 5. This means that that hal
 
 Visually representing this as a histogram show us the following.
 
-```{r Histogram_Leave_time}
+```{r Histogram_Leave_time, echo=FALSE, fig.height = 3}
 Histogram_Leave_time 
 ```
 
 We can see that most of the the people leave within 24 hours for them completing there last step. This backs up the idead that when a user wanst to leave they are most likely do this after finishing a step. Looking a the reasons why. we see
 
-```{r reason_Leave_time}
+```{r reason_Leave_time, echo=FALSE, fig.height = 3}
 Leave_time_reason 
 ```
 There is alot of people who left who didn't give a spec reason (other / I prefer not to say). We see that there is a few people. We see that there is a high amount of people that left because that the felt that the course didn't help them or that it wouldn't help them achieve there goal. I somewhat expected this to be high as if a person didn't think that the course would help them you wouldn't expect them to stay around for long.
@@ -399,7 +393,7 @@ Looking at the courses step 3.2 is a video (Devices in the future home VIDEO (03
 However what should also be mentioned is that the final step is 3.20, so there is a possibility that there has been some error in recording the data (people who finished the course are accidentally put down as leaving).
 
 
-```{r reason_Leave_32}
+```{r reason_Leave_32, echo=FALSE, fig.height = 3}
 Reason_Step_32 
 ```
 Looking at the reason given we see that the reason is overwhelimily "other". This suggest that there is a really unique issue with this video that is causing people to leave. Maybe its offending people? This is probably 
@@ -411,6 +405,7 @@ Looking at the reason given we see that the reason is overwhelimily "other". Thi
 After cleaning up my data set and getting a grips with it I decide that I wanted to Evaluate what I had found and how it could be helpful in answering my business question into "give useful insights into why people decide to leave the course". 
 
 + I have broken down alot of the timings when people leave and the most common given reason. For the most part it is either that the user dosn't have time or that they dont want to say.
++ People who left during the first week had a highest rate of people saying the course was not what they expected suggesting that there may been to be a better decstiption of the course so people know that there getting into
 + We see that there is in nearly all situation where we look at the response The amount of people saying the course was too easy or too hard was roughly the same suggesting that the difficulty isn't too much of an issue.
 + The majority (around 52%) of the people that leave don't even complete a week, suggesting that people 
 + If a person is going to leave they are likely to do it within a day of finishing within the day.
@@ -418,7 +413,156 @@ After cleaning up my data set and getting a grips with it I decide that I wanted
 
 ### Review process
 
-I found a fair bit that I could use to answer my business question in regards to why people leave at but only at what times. However we don't really know who the people are leaving are. If we could get information about who was leaving and why then more measures could be put in place to keep user from leaving the course. This gave me the idea to do another cycle to try and look into this.
+I found a fair bit that I could use to answer my business question in regards to why people leave at but only at what times. However we don't really know who the people are leaving are. If we could get information about who to was leaving and why to see if there was any common grounds. Then more measures could be put in place to keep user from leaving the course. This gave me the idea to do another cycle to try and look into this.
+
+## Data Understanding, Cycle two
+
+As I want to see who these people are that left these reviews I decided to look through all the data again to see what I could work with. I felt that the enrollments data was the perfect data set for this. As we have enrollment data for all cycles I decided to merge the enrollment data for cycles 4 to 7 together then I then merged a copy of that dataset with my cleaned leave reason database.
+
+## Explore Data, Cycle two
+Doing this merger gave me the following data to look at Gender, Enrolled time , role, age range, highest_education_level, employment_statue, employment_area and detected_country.
+
+### About the users - who are they
+
+Looking at the columns gender, Country and age range we see that the majority of these columns are dominated by Unknown data. This mat be cause by the users not wanting to enter any personal data about themselves or some issue when collecting the data.
+
+```{r users, echo=FALSE}
+
+table(merged_data$gender)
+
+table(merged_data$country)
+
+table(merged_data$age_range)
+
+```
+
+We can see that not all the Unknowns are the same size so this tells us that it might not be an error in collecting data as you would expect that all data the same rows would be unknown and not different sizes. This suggest that there is a fair few users that are not wanting to give information.
+
+There is two columns that both contain country data, country which i'm guessing what the user entered and detected_country which is probably and automatic check that has been run without the user knowing and recorded. When looking at detected_country there is alot more of a variety in the data detected_country than country (as there inst any unknown values). Doing a check of all known counties vs the results of detected_country we see that there is 108 similarities and 8 Differences suggesting that detected_country is more reliable than country data.
+
+### About the users 2 - education and employment 
+
+After looking at the area of  highest_education_level, employment_status and employment_area
+
+```{r users2, echo=FALSE, fig.height = 2}
 
 
+table(merged_data$highest_education_level)
 
+table(merged_data$employment_status)
+
+table(merged_data$employment_area)
+```
+Looking at these variables we see that there is a large amount of unknowns in each columns. I think this is primarly due to users don't wanting to say what they do, maybe there is inst the option to exactly state what the user does/is.
+
+
+#### The unkown problem 
+
+The amounts of unknown in the user data drawfs any other variable in that data, especially when there is alot of options that a user could be (for example employment_area ). 
+
+#### Two leaving dates 
+
+The merger gave me two users leaving dates. The Unrolled time from the enrollment data and the leaving time from the leaver response data. I wanted to check the if the amount of people that gave a response to leaving and the number of people unrolled from the course was the same number. Looking at the combined user data we see that there where 
+1279 users who left the course which is alot more than those who gave a leaving response. However the total size of the combined enrollment data was `r nrow(combine_Enrolments) ` meaning we have `r nrow(combine_Enrolments) - 1279` rows with no enrollment data.
+
+
+```{r Unenrolled_combined_cycle}
+table(Unenrolled_combined$Cycle)
+```
+
+In previous analysis we see that the most the user leaver reports where in the 5th cycle. This would suggest that most of the people that left would be in cycle 5. However this isn't the case as we can see the majority of people with unenrolment dates are in the 4th cycle.  
+
+```{r unenrolled_timeline , echo=FALSE, fig.height = 4}
+
+Unenrolled_combined$enrolled_at <- as.POSIXct(Unenrolled_combined$enrolled_at,format="%Y-%m-%d %H:%M:%S") 
+
+Unenrolled_combined$unenrolled_at <- as.POSIXct(Unenrolled_combined$unenrolled_at,format="%Y-%m-%d %H:%M:%S") 
+
+Unenrolled_combined <- Unenrolled_combined %>% mutate(Date = as.Date(unenrolled_at))
+
+Unenrolled_combined <- Unenrolled_combined %>% mutate(Time = strftime(unenrolled_at, format="%H"))
+
+timeline_full <- ggplot(Unenrolled_combined, aes(x=Date, y=Time),  yaxt = "n") +  geom_point() + geom_point(data = merged_data, colour = "red") + facet_wrap(~ Cycle, ncol = 1) + theme(legend.position="bottom") +
+  theme(axis.text.y=element_blank(),axis.ticks.y=element_blank()) + ggtitle("Visual comparison of unenrolled data vs leaver responce") +  geom_vline(xintercept = as.Date("2017-11-13")) +  geom_vline(xintercept = as.Date("2018-02-05")) +  geom_vline(xintercept = as.Date("2018-06-11")) + geom_vline(xintercept = as.Date("2018-09-10"))
+
+timeline_full
+
+``` 
+I wanted to visually compared the two set of leaving data, the enrolled data with an unenrolled_at date and the leavers response data set to see what they would look like against one another. We find something interesting with by doing this. What we see is that there as the cycles go on there is alot less people leaving so the difference between the amount of unrolled_at and leavers response becomes smaller. What we also see is that alot of cycles have people unrolling surprisingly late after the course (for example there are people in the 4th cycle that unenrolled in the 7th cycle)
+
+As we saw with the Visual comparison of unrolled data vs leaver response along a time line we see that there is a lot of people unenrolling months after there course had ended. I thought (though unlikely) that this may be an error in the data being recorded (i.e people are being recorded in one cycles database when they actually attended another cycle). I decided to check when people enrolled for a course. If people had enrolled way after that cycle ended then there had obviously had been some issues. 
+
+```{r pressure, echo=FALSE, fig.height = 4}
+
+Unenrolled_combined$enrolled_at <- as.POSIXct(Unenrolled_combined$enrolled_at,format="%Y-%m-%d %H:%M:%S") 
+
+Unenrolled_combined <- Unenrolled_combined %>% mutate(Date = as.Date(enrolled_at))
+
+Unenrolled_combined <- Unenrolled_combined %>% mutate(Time = strftime(enrolled_at, format="%H"))
+
+ ggplot(Unenrolled_combined, aes(x=Date, y=Time),  yaxt = "n") +  geom_point()  + facet_wrap(~ Cycle, ncol = 1) + theme(legend.position="bottom") +
+  theme(axis.text.y=element_blank(),axis.ticks.y=element_blank()) + ggtitle("Enrollment dates") +  geom_vline(xintercept = as.Date("2017-11-13")) +  geom_vline(xintercept = as.Date("2018-02-05")) +  geom_vline(xintercept = as.Date("2018-06-11")) + geom_vline(xintercept = as.Date("2018-09-10"))
+
+```
+
+Looking at the time scale of enrollment dates we see this doesn't hold, there is no instance where a person enroles for a course after it had finished. What is weird is that there does seem to be some overlap in enrollment times. For example there are people who enroll just before cycle 4 ended and at the same time there are people who are enrolling for cycle 5. This may mean that a user can apply for course whenever they want to and then have as long as they want to complete it.
+
+
+## Assumtion three
+
+As we see we have people that have an people with an unenrollment date and people who havnt. Based on this I am going to assume the following. People without any data unenrollment are still working on the material or have just left it without formally leaving (they just logged off one day and havnt come back). This means that i will assume that the unenrollment date is for both those who have left the course and those who have completed the course.
+
+## Data Exploration, Cycle 2
+
+As we have seen alot of the data that i wanted to look at that help define who a user was mostly made up by NA values. This meant that we only had a little bit of data that we could actually use if we wanted to look at things like how age effected why people left. I did do checks on these graphs but it didnt yeild any decent results as it wouldnt make sense to state how an over all group of people found the course based off what one or two people said.
+
+## Time between enrolling and leaving
+
+Whilst not exactly the main reason I merged the enrollment and leaving data together, i did give me the oppurinty to find out the time between when a user joined the course and then left the course and gave a response. Finding out the typical time for someone to leave the course could be interesting as it means that measure could be put in place to try and stop this.
+
+```{r enrole_to_leave, echo=FALSE , fig.height = 3}
+
+summary(as.numeric(time_bet_enroll_leave$time_to_leave))
+
+time_to_leave_min
+
+Reason_day_one
+
+```
+ 
+As we can alarmingly see, from the violin and the box plot, a lot of the people within a week after enrolling the.
+
+When looking at the reason why we see that there is alot of people who say that they left for the "other" reasons, As expected of people who would leave just as a course began not having enough time is another big chunk of people leaving the course.
+
+## Evaluation of secound cycle.
+
+Due to the poor quality of the results captured in the enrollment data base there wasn't too much that we would get from this set of data. In all of the columns that i wanted to look at (age, role, education) Na values took up a majority of all the total results, splits the remaining results across around 5 ish different variables we would only have 1 or 2 leaver response in each category which i didn't feel like it was smart to categories a full group from people by what one person said. There is not too much I could do to fix this without doing further analysis using extra data. I just had to leave this data as unkown.
+
+### What I found
+
+Though i didn't find out what I was expecting I was able to use the enrollment time to good effect.
+
++ In the enrollment data there is 1279 users with an unenrollment date meaning that there either allot of people that are unenrolling from the course and decide to leave the course. Unerollment date could also be a combination of people who finished the course plus left the course meaning. If this is true that means in cycles 4 to 7 there is `r nrow(combine_Enrolments) - 1279` users who didn't complete or officially leave the course.
++ When looking at how long it takes a user to officially leave after they joined the course it takes on average a month. However we also see that 25% of these people leave with a week, with the primary reason being other. 
+
+Whilst not what I was looking for I do believe that both these meet the business object "give useful insights into why people decide to leave the course" as the first point hints that either that the we have a bunch of that leave but don't give a response or we have alot of people that are starting the course but dropping out with out officially leaving. The other point suggest that when a person enrolls there is a fair bit of time before they un-enroll so the creators of the course may have more time than previously thought to get users more engaged  in the course.
+
+## Deployment
+
+### Conclusions for the business
+
+### Review of business objectives
+
+I feel like my project was able to meet the business objective of "give useful insights into why people decide to leave the course" as I was able to find several insights into why people leave the course. However this pirmaly have to do with the reason why people leave given a certain / point in time and nothing else. More work could should be done to look into who is leaving or if there is any other causes that make people leave the course. We see that most of the time that a user says the reson they left was other, it would be nice to know what that that other refers to.
+
+### Review project
+
+Whilst I felt that my first cycle went quite well as I was able to clean up the data and was able to find find alot to do with "why people decide to leave the course" as the leaver response data contained alot of useful facts and figures that could help us. Unfortantly i ran into some issues using the enrollment data, there was too much missing data for me to make any real use out of it apart from doing some stuff in the enrolment data which is a same as finding out who excatly is leaving could help us predict why a similar user may leave in the future. 
+
+### Summary of results 
+
+I felt like that my analysis was good, I didnt have to make that many assumptions and those assumptions that I did make I gave evidence to why I think my assumption would be correct.
+
+### Future data mining
+
+If we could work out who exactly was leaving we could potianlly work on analysis  
