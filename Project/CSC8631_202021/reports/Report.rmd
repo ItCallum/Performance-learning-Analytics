@@ -266,7 +266,7 @@ My assumption is that either
 
 If we plot out the reasons why these NA people left we find out that the majority left due to them not having enough time or for other reasons. If these people NA people are infact leaving at the start of the course this results sort of makes sense (they joined the course but discovered they didnt have much time to work on it so they to leave at the start)
 
-```{r Check_Na_leaving_reason_bar, echo=FALSE, fig.height = 3}
+```{r Check_Na_leaving_reason_bar, echo=FALSE, fig.height = 4}
 
   Check_Na_leaving_reason_bar
 
@@ -474,18 +474,8 @@ In previous analysis we see that the most the user leaver reports where in the 5
 
 ```{r unenrolled_timeline , echo=FALSE, fig.height = 4}
 
-Unenrolled_combined$enrolled_at <- as.POSIXct(Unenrolled_combined$enrolled_at,format="%Y-%m-%d %H:%M:%S") 
 
-Unenrolled_combined$unenrolled_at <- as.POSIXct(Unenrolled_combined$unenrolled_at,format="%Y-%m-%d %H:%M:%S") 
-
-Unenrolled_combined <- Unenrolled_combined %>% mutate(Date = as.Date(unenrolled_at))
-
-Unenrolled_combined <- Unenrolled_combined %>% mutate(Time = strftime(unenrolled_at, format="%H"))
-
-timeline_full <- ggplot(Unenrolled_combined, aes(x=Date, y=Time),  yaxt = "n") +  geom_point() + geom_point(data = merged_data, colour = "red") + facet_wrap(~ Cycle, ncol = 1) + theme(legend.position="bottom") +
-  theme(axis.text.y=element_blank(),axis.ticks.y=element_blank()) + ggtitle("Visual comparison of unenrolled data vs leaver responce") +  geom_vline(xintercept = as.Date("2017-11-13")) +  geom_vline(xintercept = as.Date("2018-02-05")) +  geom_vline(xintercept = as.Date("2018-06-11")) + geom_vline(xintercept = as.Date("2018-09-10"))
-
-timeline_full
+timeline_full_Unenrolled
 
 ``` 
 I wanted to visually compared the two set of leaving data, the enrolled data with an unenrolled_at date and the leavers response data set to see what they would look like against one another. We find something interesting with by doing this. What we see is that there as the cycles go on there is alot less people leaving so the difference between the amount of unrolled_at and leavers response becomes smaller. What we also see is that alot of cycles have people unrolling surprisingly late after the course (for example there are people in the 4th cycle that unenrolled in the 7th cycle)
@@ -494,14 +484,7 @@ As we saw with the Visual comparison of unrolled data vs leaver response along a
 
 ```{r pressure, echo=FALSE, fig.height = 4}
 
-Unenrolled_combined$enrolled_at <- as.POSIXct(Unenrolled_combined$enrolled_at,format="%Y-%m-%d %H:%M:%S") 
-
-Unenrolled_combined <- Unenrolled_combined %>% mutate(Date = as.Date(enrolled_at))
-
-Unenrolled_combined <- Unenrolled_combined %>% mutate(Time = strftime(enrolled_at, format="%H"))
-
- ggplot(Unenrolled_combined, aes(x=Date, y=Time),  yaxt = "n") +  geom_point()  + facet_wrap(~ Cycle, ncol = 1) + theme(legend.position="bottom") +
-  theme(axis.text.y=element_blank(),axis.ticks.y=element_blank()) + ggtitle("Enrollment dates") +  geom_vline(xintercept = as.Date("2017-11-13")) +  geom_vline(xintercept = as.Date("2018-02-05")) +  geom_vline(xintercept = as.Date("2018-06-11")) + geom_vline(xintercept = as.Date("2018-09-10"))
+Enrollment_dates
 
 ```
 
@@ -520,7 +503,7 @@ As we have seen alot of the data that i wanted to look at that help define who a
 
 Whilst not exactly the main reason I merged the enrollment and leaving data together, i did give me the oppurinty to find out the time between when a user joined the course and then left the course and gave a response. Finding out the typical time for someone to leave the course could be interesting as it means that measure could be put in place to try and stop this.
 
-```{r enrole_to_leave, echo=FALSE , fig.height = 3}
+```{r enrole_to_leave, echo=FALSE , fig.height = 4}
 
 summary(as.numeric(time_bet_enroll_leave$time_to_leave))
 

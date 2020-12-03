@@ -56,18 +56,7 @@ table(Unenrolled_combined$Cycle)
 
 Unenrolled_combined
 
-Unenrolled_combined$enrolled_at <- as.POSIXct(Unenrolled_combined$enrolled_at,format="%Y-%m-%d %H:%M:%S") 
-
-Unenrolled_combined$unenrolled_at <- as.POSIXct(Unenrolled_combined$unenrolled_at,format="%Y-%m-%d %H:%M:%S") 
-
-Unenrolled_combined <- Unenrolled_combined %>% mutate(Date = as.Date(unenrolled_at))
-
-Unenrolled_combined <- Unenrolled_combined %>% mutate(Time = strftime(unenrolled_at, format="%H"))
-
-timeline_full <- ggplot(Unenrolled_combined, aes(x=Date, y=Time),  yaxt = "n") +  geom_point() + geom_point(data = merged_data, colour = "red") + facet_wrap(~ Cycle, ncol = 1) + theme(legend.position="bottom") +
-  theme(axis.text.y=element_blank(),axis.ticks.y=element_blank()) + ggtitle("Visual comparison of unenrolled data vs leaver responce") +  geom_vline(xintercept = as.Date("2017-11-13")) +  geom_vline(xintercept = as.Date("2018-02-05")) +  geom_vline(xintercept = as.Date("2018-06-11")) + geom_vline(xintercept = as.Date("2018-09-10"))
-
-timeline_full
+timeline_full_Unenrolled
 ```
 ## Did anyone enrole after they left
 
@@ -88,15 +77,7 @@ Looking at the time scale of enrollment dates we see this doesn't hold, there is
 
 ```{r pressure, echo=FALSE}
 
-Unenrolled_combined$enrolled_at <- as.POSIXct(Unenrolled_combined$enrolled_at,format="%Y-%m-%d %H:%M:%S") 
-
-Unenrolled_combined <- Unenrolled_combined %>% mutate(Date = as.Date(enrolled_at))
-
-Unenrolled_combined <- Unenrolled_combined %>% mutate(Time = strftime(enrolled_at, format="%H"))
-
- ggplot(Unenrolled_combined, aes(x=Date, y=Time),  yaxt = "n") +  geom_point()  + facet_wrap(~ Cycle, ncol = 1) + theme(legend.position="bottom") +
-  theme(axis.text.y=element_blank(),axis.ticks.y=element_blank()) + ggtitle("Enrollment dates") +  geom_vline(xintercept = as.Date("2017-11-13")) +  geom_vline(xintercept = as.Date("2018-02-05")) +  geom_vline(xintercept = as.Date("2018-06-11")) + geom_vline(xintercept = as.Date("2018-09-10"))
-
+timeline_full_enrolled
 
 ```
 
@@ -201,9 +182,9 @@ At first I thought that there might be duplicates user entries in the enrollment
 
 ```{r pressure, echo=FALSE}
 
- has_NA 
+has_NA 
 
- diffrent_leaving_times 
+## diffrent_leaving_times <-merged_data %>% filter(left_at != unenrolled_at) %>% select(left_at , unenrolled_at, Cycle, last_completed_week_number)
 
 ```
 
