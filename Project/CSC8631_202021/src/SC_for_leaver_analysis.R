@@ -14,7 +14,7 @@ leaving_reason_lcwn <- ggplot(combine_Leaving_clean_v2, aes(leaving_reason), fil
 
 ## A bar chart of the percentage reason of each leaving_reason for each week
 leaving_reason_lcwn_percenatge <- ggplot(percenatge_table, aes(x="", y = percent, fill=Var1)) + 
-  geom_bar(width = 1, stat = "identity") + ggtitle("The reason why people left") + facet_wrap(~ Var2)
+  geom_bar(width = 1, stat = "identity") + ggtitle("The reason why people left in each Week") + facet_wrap(~ Var2) + labs(fill = "Reason") +  theme(legend.text = element_text(size = 6))
 
 
 ##Time between leaving 
@@ -27,8 +27,8 @@ Histogram_Leave_time <- ggplot(time_between, aes(x=as.numeric(days_passed))) +
   geom_histogram(binwidth=1, colour="black", fill="white") + ggtitle("Histogram of days passed between a users last step and the time the offically left")
 
 ## A barchart of reasons left of the people who finished a step and then left within a day 
-Leave_time_reason <- ggplot(time_between %>% filter(days_passed == 0), aes(leaving_reason)) + geom_bar() + 
-  coord_flip()  + ggtitle("The reason why people left within a day")
+Leave_time_reason <- ggplot(time_between %>% filter(days_passed == 0), aes(leaving_reason, fill=leaving_reason)) + geom_bar() + 
+  coord_flip()  + ggtitle("The reason why people left within a day") + theme(legend.position = "none" , axis.text=element_text(size=6)) + xlab("Leaving reason")
 
 ## Step 32
 
@@ -36,8 +36,8 @@ Leave_time_reason <- ggplot(time_between %>% filter(days_passed == 0), aes(leavi
 Step_32 <- combine_Leaving_clean_v2 %>% filter(last_completed_step == 3.2)
 
 ##Plot all the reasons for leaving at setp 3.2
-Reason_Step_32 <- ggplot(Step_32, aes(leaving_reason), fill=leaving_reason) + geom_bar() + 
-  coord_flip() + ggtitle("The reason why people left at step 32")
+Reason_Step_32 <- ggplot(Step_32, aes(leaving_reason, fill=leaving_reason)) + geom_bar() + 
+  coord_flip() + ggtitle("The reason why people left at step 3.2") +  theme(legend.position = "none" , axis.text=element_text(size=6)) + xlab("Leaving reason")
 
 ##Plot all the reasons for leaving at setp 3.2 and put it by cycle
 Reason_cycle_Step_32 <- ggplot(Step_32, aes(leaving_reason), fill=leaving_reason) + geom_bar() + 

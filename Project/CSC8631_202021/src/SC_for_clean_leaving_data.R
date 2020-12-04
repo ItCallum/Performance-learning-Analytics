@@ -39,12 +39,11 @@ Reason_Prectange <- ggplot(reasons_precenatge_df, aes(x="", y = percent, fill=Va
   geom_bar(width = 1, stat = "identity") + ggtitle("The reason why people left")
 
 ## A count of each reason why people left 
-Reason_Count <- ggplot(combine_Leaving_NoDups, aes(leaving_reason)) + geom_bar() + 
-  coord_flip() + ggtitle("The reasons why people left")
+Reason_Count <- ggplot(combine_Leaving_NoDups, aes(leaving_reason, fill=leaving_reason))  +  geom_bar() + coord_flip() + ggtitle("The reasons why people left") + theme(legend.position = "none" , axis.text=element_text(size=6)) + xlab("Leaving reason")
 
 ## A count of each reason why people left but by cycle
-Reason_Count_cycle <- ggplot(combine_Leaving_NoDups, aes(leaving_reason)) + geom_bar() + facet_wrap(~ Cycle, ncol = 2) + 
-  coord_flip()  + ggtitle("The reasons why people left per cycle")
+Reason_Count_cycle <- ggplot(combine_Leaving_NoDups, aes(leaving_reason , fill=leaving_reason)) + geom_bar() + facet_wrap(~ Cycle, ncol = 2) + 
+  coord_flip()  + ggtitle("The reasons why people left per cycle")  + theme(legend.position = "none" , axis.text=element_text(size=6)) + xlab("Leaving reason")
 
 ## Did anyone have a last completed week less than there last completed step.
 
@@ -65,7 +64,7 @@ combine_Leaving_NoDups_Zero[is.na(combine_Leaving_NoDups)] <- 0
 lcw_table <- table(combine_Leaving_clean$last_completed_week_number)
 
 ##A graph for the number of leavers per week
-Leavers_perweek_percycle <- ggplot(combine_Leaving_clean, aes(last_completed_week_number)) + geom_bar() + facet_wrap(~ Cycle, ncol = 2) + ggtitle("The amount of leavers last completed week")
+Leavers_perweek_percycle <- ggplot(combine_Leaving_clean, aes(last_completed_week_number, fill = last_completed_week_number)) + geom_bar() + facet_wrap(~ Cycle, ncol = 2) + ggtitle("The amount of leavers last completed week") + theme(legend.position = "none") + xlab("Week") + ylab("Count of leaver responces")
 
 lsc_table <- table(combine_Leaving_clean$last_completed_step)
 
@@ -80,13 +79,11 @@ no_zero_lcs_bar_cycle <-ggplot(combine_Leaving_clean_Remove_Zero, aes(last_compl
 
 ## How many people left 
 
-## 
 Check_Na <- combine_Leaving_NoDups[rowSums(is.na(combine_Leaving_NoDups)) > 0,]
 
 NA_Leaving_reason <- table(Check_Na$leaving_reason)
 
-Check_Na_leaving_reason_bar <- ggplot(Check_Na, aes(leaving_reason)) + geom_bar() + 
-  coord_flip() + ggtitle("The reason why people left but didnt complete a step")
+Check_Na_leaving_reason_bar <- ggplot(Check_Na, aes(leaving_reason, , fill=leaving_reason)) + geom_bar() + coord_flip() + ggtitle("The reason why people left but didnt complete a step") + theme(legend.position = "none" , axis.text=element_text(size=6)) + xlab("Leaving reason")
 
 ## The day people left
 

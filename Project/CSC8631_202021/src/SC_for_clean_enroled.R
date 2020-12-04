@@ -23,16 +23,7 @@ diffrent_country_results <- df_same_country %>% filter(same_country == FALSE )
 
 ## - Why so many Unenrolled when compared to the users that are 
 
-##Set up a new dataset that will consist of user in the combing enrollment dataset that has an unenrolled_at time
-Unenrolled_combined <- combine_Enrolments[!(is.na(combine_Enrolments$unenrolled_at) | combine_Enrolments$unenrolled_at==""), ]
 
-Unenrolled_combined$enrolled_at <- as.POSIXct(Unenrolled_combined$enrolled_at,format="%Y-%m-%d %H:%M:%S") 
-
-Unenrolled_combined$unenrolled_at <- as.POSIXct(Unenrolled_combined$unenrolled_at,format="%Y-%m-%d %H:%M:%S")
-
-##These have to be date and time match so that it matched the columns in the merged_data
-Unenrolled_combined <- Unenrolled_combined %>% mutate(Date = as.Date(unenrolled_at))
-Unenrolled_combined <- Unenrolled_combined %>% mutate(Time = strftime(unenrolled_at, format="%H"))
 
 ##Time line of Unerollment times compared to leaver responces
 timeline_full_Unenrolled <- ggplot(Unenrolled_combined, aes(x=Date, y=Time),  yaxt = "n") +  geom_point() + geom_point(data = merged_data, colour = "red") + facet_wrap(~ Cycle, ncol = 1) + theme(legend.position="bottom") +

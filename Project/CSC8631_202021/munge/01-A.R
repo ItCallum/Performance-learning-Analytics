@@ -1,29 +1,51 @@
 
+
 ## Add an cycle ID to say what cycle each row came from
 cyber_security_4_leaving_survey_responses <- cyber_security_4_leaving_survey_responses %>% mutate(Cycle = 4)
+
+##Change the response to get rid of errors.
+## I know this is horrid but its the only way I actually got it to work (sad face)
+cyber_security_4_leaving_survey_responses$leaving_reason[cyber_security_4_leaving_survey_responses$leaving_reason == "I donâ\200\231t have enough time"] <- "I do not have enough time"
+cyber_security_4_leaving_survey_responses$leaving_reason[cyber_security_4_leaving_survey_responses$leaving_reason == "The course wasnâ\200\231t what I expected"] <- "The course was not what I expected"
+cyber_security_4_leaving_survey_responses$leaving_reason[cyber_security_4_leaving_survey_responses$leaving_reason == "The course wonâ\200\231t help me reach my goals"] <- "The course would not help me reach my goals"
+
 cyber_security_5_leaving_survey_responses <- cyber_security_5_leaving_survey_responses %>% mutate(Cycle = 5)
+
+cyber_security_5_leaving_survey_responses$leaving_reason[cyber_security_5_leaving_survey_responses$leaving_reason == "I donâ\200\231t have enough time"] <- "I do not have enough time"
+cyber_security_5_leaving_survey_responses$leaving_reason[cyber_security_5_leaving_survey_responses$leaving_reason == "The course wasnâ\200\231t what I expected"] <- "The course was not what I expected"
+cyber_security_5_leaving_survey_responses$leaving_reason[cyber_security_5_leaving_survey_responses$leaving_reason == "The course wonâ\200\231t help me reach my goals"] <- "The course would not help me reach my goals"
+
 cyber_security_6_leaving_survey_responses <- cyber_security_6_leaving_survey_responses %>% mutate(Cycle = 6)
+
+
+cyber_security_6_leaving_survey_responses$leaving_reason[cyber_security_6_leaving_survey_responses$leaving_reason == "I donâ\200\231t have enough time"] <- "I do not have enough time"
+cyber_security_6_leaving_survey_responses$leaving_reason[cyber_security_6_leaving_survey_responses$leaving_reason == "The course wasnâ\200\231t what I expected"] <- "The course was not what I expected"
+cyber_security_6_leaving_survey_responses$leaving_reason[cyber_security_6_leaving_survey_responses$leaving_reason == "The course wonâ\200\231t help me reach my goals"] <- "The course would not help me reach my goals"
+
 cyber_security_7_leaving_survey_responses <- cyber_security_7_leaving_survey_responses %>% mutate(Cycle = 7)
+
+
+cyber_security_7_leaving_survey_responses$leaving_reason[cyber_security_7_leaving_survey_responses$leaving_reason == "I donâ\200\231t have enough time"] <- "I do not have enough time"
+cyber_security_7_leaving_survey_responses$leaving_reason[cyber_security_7_leaving_survey_responses$leaving_reason == "The course wasnâ\200\231t what I expected"] <- "The course was not what I expected"
+cyber_security_7_leaving_survey_responses$leaving_reason[cyber_security_7_leaving_survey_responses$leaving_reason == "The course wonâ\200\231t help me reach my goals"] <- "The course would not help me reach my goals"
 
 ## Combined each of the leaving response dataset to make one big data set the contains every possible leavers response
 combine_Leaving <- do.call("rbind", list((cyber_security_4_leaving_survey_responses),(cyber_security_5_leaving_survey_responses),
                       (cyber_security_6_leaving_survey_responses),(cyber_security_7_leaving_survey_responses) ))
 
 ## There is a weird translation error in the users response that this code attepts to get rid of
-levels(combine_Leaving$leaving_reason) <- c(levels(combine_Leaving$leaving_reason), "I do not have enough time")
-levels(combine_Leaving$leaving_reason) <- c(levels(combine_Leaving$leaving_reason), "The course was not what I expected")
-levels(combine_Leaving$leaving_reason) <- c(levels(combine_Leaving$leaving_reason), "The course would not help me reach my goals")
 
-combine_Leaving$leaving_reason[combine_Leaving$leaving_reason == 'I donâ\200\231t have enough time'] <- 'I do not have enough time'
-combine_Leaving$leaving_reason[combine_Leaving$leaving_reason == '	The course wasnâ\200\231t what I expected'] <- 'The course was not what I expected'
-combine_Leaving$leaving_reason[combine_Leaving$leaving_reason == 'The course wonâ\200\231t help me reach my goals'] <- 'The course would not help me reach my goals'
+
+combine_Leaving$leaving_reason[combine_Leaving$leaving_reason == "I donâ\200\231t have enough time"] <- "I do not have enough time"
+combine_Leaving$leaving_reason[combine_Leaving$leaving_reason == "The course wasnâ\200\231t what I expected"] <- "The course was not what I expected"
+combine_Leaving$leaving_reason[combine_Leaving$leaving_reason == "The course wonâ\200\231t help me reach my goals"] <- "The course would not help me reach my goals"
+
 
 
 ## Convert the the cycle number to be a factor instead of a 
 combine_Leaving$Cycle <- factor(combine_Leaving$Cycle)
 
-## Remove all users that have left two or resoponces in the same cycle
-combine_Leaving_NoDups <- combine_Leaving %>% group_by(learner_id,Cycle) %>% filter(n()==1)
+combine_Leaving_NoDups <- combine_Leaving
 
 ## Make a duplicate of combine_Leaving_NoDups called combine_Leaving_clean which the dataset that I am going to do all of my cleaning functions on
 combine_Leaving_clean <- combine_Leaving_NoDups
@@ -60,7 +82,7 @@ combine_Leaving_clean_v2 <- combine_Leaving_clean %>% filter(left_at > last_comp
 
 ## Creation of a sub database that was used for one test. It works out the time between when a user finshed there last step and when they decide to leave in both minuets and how many days passed. 
 time_between <- (na.omit(combine_Leaving_clean_v2)) %>% mutate(time_between_deciding_to_leave = difftime(left_at, last_completed_step_at, unit = "mins"), days_passed = floor(difftime(left_at, last_completed_step_at, unit = "days"))) 
-
+time_between <- time_between %>% filter(days_passed >= 0)
 
 # - Cycle 2
 
@@ -87,3 +109,13 @@ combine_Enrolments$enrolled_at <- as.POSIXct(combine_Enrolments$enrolled_at,form
 ## This is so we can get all the useful enrollment data realting to each users row
 merged_data <- merge(combine_Leaving_clean_v2,combine_Enrolments,by=c("learner_id", "Cycle" ))
 
+##Set up a new dataset that will consist of user in the combing enrollment dataset that has an unenrolled_at time
+Unenrolled_combined <- combine_Enrolments[!(is.na(combine_Enrolments$unenrolled_at) | combine_Enrolments$unenrolled_at==""), ]
+
+Unenrolled_combined$enrolled_at <- as.POSIXct(Unenrolled_combined$enrolled_at,format="%Y-%m-%d %H:%M:%S") 
+
+Unenrolled_combined$unenrolled_at <- as.POSIXct(Unenrolled_combined$unenrolled_at,format="%Y-%m-%d %H:%M:%S")
+
+##These have to be date and time match so that it matched the columns in the merged_data
+Unenrolled_combined <- Unenrolled_combined %>% mutate(Date = as.Date(unenrolled_at))
+Unenrolled_combined <- Unenrolled_combined %>% mutate(Time = strftime(unenrolled_at, format="%H"))

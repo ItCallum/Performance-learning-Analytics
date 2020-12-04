@@ -55,5 +55,5 @@ Histogram_time <- ggplot(time_bet_enroll_leave, aes(x = as.numeric(time_to_leave
 
 ##Reason left day one
 Reason_day_one <- ggplot(time_bet_enroll_leave %>% filter(time_to_leave <= 7)
-                         , aes(leaving_reason)) + geom_bar() +  
-  coord_flip()  + ggtitle("The reasons why people left with a day")
+                         , aes(leaving_reason , fill = leaving_reason)) + geom_bar() +  
+  coord_flip()  + ggtitle("The reasons why people left with a day after enrolling") + theme(legend.position = "none" , axis.text=element_text(size=6)) + xlab("Leaving reason")
