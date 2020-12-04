@@ -14,7 +14,7 @@ leaving_reason_lcwn <- ggplot(combine_Leaving_clean_v2, aes(leaving_reason), fil
 
 ## A bar chart of the percentage reason of each leaving_reason for each week
 leaving_reason_lcwn_percenatge <- ggplot(percenatge_table, aes(x="", y = percent, fill=Var1)) + 
-  geom_bar(width = 1, stat = "identity") + ggtitle("The reason why people left in each Week") + facet_wrap(~ Var2) + labs(fill = "Reason") +  theme(legend.text = element_text(size = 6))
+  geom_bar(width = 1, stat = "identity") + ggtitle("The reason why people left in each Week") + facet_wrap(~ Var2) + labs(fill = "Reason") +  theme(legend.text = element_text(size = 7))
 
 
 ##Time between leaving 
@@ -24,7 +24,7 @@ Density_Leave_time <- ggplot(time_between, aes(x=as.numeric(time_between$time_be
 
 ## A histogram of how many days passed between when a person last fished a step and then left the course    
 Histogram_Leave_time <- ggplot(time_between, aes(x=as.numeric(days_passed))) +
-  geom_histogram(binwidth=1, colour="black", fill="white") + ggtitle("Histogram of days passed between a users last step and the time the offically left")
+  geom_histogram(binwidth=1, colour="black", fill="white") + ggtitle("Days passed between last step and leaving")
 
 ## A barchart of reasons left of the people who finished a step and then left within a day 
 Leave_time_reason <- ggplot(time_between %>% filter(days_passed == 0), aes(leaving_reason, fill=leaving_reason)) + geom_bar() + 

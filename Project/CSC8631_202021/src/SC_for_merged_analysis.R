@@ -47,7 +47,10 @@ time_bet_enroll_leave <- merged_data %>% mutate(time_to_leave = floor(difftime( 
 
 ## box and violin and of time between enroll and leaving
 time_to_leave_min <- ggplot(time_bet_enroll_leave, aes(x = "" , y=as.numeric(time_to_leave))) +
-  geom_violin() + geom_boxplot(width = 0.5) +  ggtitle("Histogram of days passed between a users last step and the time the offically left")
+  geom_violin() + geom_boxplot(width = 0.5) +  ggtitle("Days passed between a user enrolling and leaving with a responce") + ylab("Time (days passed)") + 
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
 
 ##hist of leaving time
 Histogram_time <- ggplot(time_bet_enroll_leave, aes(x = as.numeric(time_to_leave))) +
@@ -56,4 +59,4 @@ Histogram_time <- ggplot(time_bet_enroll_leave, aes(x = as.numeric(time_to_leave
 ##Reason left day one
 Reason_day_one <- ggplot(time_bet_enroll_leave %>% filter(time_to_leave <= 7)
                          , aes(leaving_reason , fill = leaving_reason)) + geom_bar() +  
-  coord_flip()  + ggtitle("The reasons why people left with a day after enrolling") + theme(legend.position = "none" , axis.text=element_text(size=6)) + xlab("Leaving reason")
+  coord_flip()  + ggtitle("The reasons why people left with a day after enrolling") + theme(legend.position = "none" , axis.text=element_text(size=7)) + xlab("Leaving reason")

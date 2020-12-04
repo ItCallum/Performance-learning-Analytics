@@ -39,7 +39,7 @@ Reason_Prectange <- ggplot(reasons_precenatge_df, aes(x="", y = percent, fill=Va
   geom_bar(width = 1, stat = "identity") + ggtitle("The reason why people left")
 
 ## A count of each reason why people left 
-Reason_Count <- ggplot(combine_Leaving_NoDups, aes(leaving_reason, fill=leaving_reason))  +  geom_bar() + coord_flip() + ggtitle("The reasons why people left") + theme(legend.position = "none" , axis.text=element_text(size=6)) + xlab("Leaving reason")
+Reason_Count <- ggplot(combine_Leaving_NoDups, aes(leaving_reason, fill=leaving_reason))  +  geom_bar() + coord_flip() + ggtitle("The reasons why people left") + theme(legend.position = "none" , axis.text=element_text(size=7)) + xlab("Leaving reason")
 
 ## A count of each reason why people left but by cycle
 Reason_Count_cycle <- ggplot(combine_Leaving_NoDups, aes(leaving_reason , fill=leaving_reason)) + geom_bar() + facet_wrap(~ Cycle, ncol = 2) + 
@@ -83,7 +83,7 @@ Check_Na <- combine_Leaving_NoDups[rowSums(is.na(combine_Leaving_NoDups)) > 0,]
 
 NA_Leaving_reason <- table(Check_Na$leaving_reason)
 
-Check_Na_leaving_reason_bar <- ggplot(Check_Na, aes(leaving_reason, , fill=leaving_reason)) + geom_bar() + coord_flip() + ggtitle("The reason why people left but didnt complete a step") + theme(legend.position = "none" , axis.text=element_text(size=6)) + xlab("Leaving reason")
+Check_Na_leaving_reason_bar <- ggplot(Check_Na, aes(leaving_reason, , fill=leaving_reason)) + geom_bar() + coord_flip() + ggtitle("The reason why people left but didnt complete a step") + theme(legend.position = "none" , axis.text=element_text(size=7)) + xlab("Leaving reason")
 
 ## The day people left
 
@@ -95,7 +95,7 @@ timeline_Cycle_7 <- combine_Leaving_clean %>% filter(Cycle == 7) %>%  ggplot(aes
 
 ## main timeline graph of when people left
 timeline_full <- ggplot(combine_Leaving_clean, aes(x=Date, y=Time, color=last_completed_week_number),  yaxt = "n") + geom_point()+ facet_wrap(~ Cycle, ncol = 1) + theme(legend.position="bottom")+
-  theme(axis.text.y=element_blank(),axis.ticks.y=element_blank()) + ggtitle("Time line of users leaving and there Last completed week") + 
+  theme(axis.text.y=element_blank(),axis.ticks.y=element_blank()) + ggtitle("Time line of users leaving and there Last completed week") + ylab("Time (Hour)") + 
   geom_vline(xintercept = as.Date("2017-11-13")) + annotate("text", x = as.Date("2017-11-13") - 3, y = 4, label = "4",colour = "red") + 
   geom_vline(xintercept = as.Date("2018-02-05")) + annotate("text", x = as.Date("2018-02-05") - 3, y = 4, label = "5",colour = "red") + 
   geom_vline(xintercept = as.Date("2018-06-11")) + annotate("text", x = as.Date("2018-06-11") - 3, y = 4, label = "6",colour = "red") + 
