@@ -42,9 +42,11 @@ There are 403 rows and 9 variable columns
 
 ```{r data_check}
 
+dim(combine_Leaving)
+
 combine_Leaving
 
-dim(combine_Leaving)
+time_between
 
 ```
 
