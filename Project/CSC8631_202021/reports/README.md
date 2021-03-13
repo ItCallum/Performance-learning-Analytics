@@ -2,7 +2,7 @@ As you can see there are 6 diffrent Rmd files. I will quick dissucss them here.
 
 Report -
 
-This is what I am sumbitting as my MAX 20 page Report for my exploraity analysis using CRISPDM. This is the only one that I have created a pdf for so please use that as my submission.
+This is what I am submitting as my MAX 20 page Report for my exploraity analysis using CRISPDM. This is the only one that I have created a pdf for so please use that as my submission.
 
 The other files -
 
