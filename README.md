@@ -11,5 +11,4 @@ Learning Analytics is a rapidly-growing application area for Data Science, defin
 
 I wanted to get a better understanding of why a user leaves the course. I feel like this would be a good measure of engagement as If could get the common reasons and trends that are causing people to want to leave the course, then with these findings could be improved in future courses improve to hopful reduce people leaving and keep more people engaged.
 
-- To run
 
