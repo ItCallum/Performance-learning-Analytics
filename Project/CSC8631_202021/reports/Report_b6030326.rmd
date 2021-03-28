@@ -1,6 +1,6 @@
 ---
-title: "CSC8631 202021 Report"
-author: "Callum Matthew Simpson - b6030326"
+title: "Performance-learning analytics"
+author: "Callum Matthew Simpson"
 output:
   pdf_document: default
   word_document: default
@@ -28,7 +28,7 @@ source("src/SC_for_clean_leaving_data.R")
 
 ```
 
-The following is my report of my analysis CSC8631 - Data Management and Exploratory Data Analysis course work. It will discuss my analysis and how I did it using the Crisp-DM model.
+The following is my report of my Data Management and Exploratory Data Analysis course work. It will discuss my analysis and how I did it using the Crisp-DM model.
 
 ## Business understanding
 As the first step in the Crisp-DM model is business understanding I first looked into the task that I had been given and who gave it was for.
